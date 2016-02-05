@@ -6,6 +6,7 @@ public class PlayerMovementBehaviour : MonoBehaviour {
 
     // components
     new private Rigidbody rigidbody;
+    new private Transform camera;
 
     // settings
     public float moveForce = 3f;
@@ -17,14 +18,19 @@ public class PlayerMovementBehaviour : MonoBehaviour {
     // Use this for initialization
     void Awake() {
         rigidbody = GetComponent<Rigidbody>();
+        camera = Camera.main.transform;
     }
 
     // Update is called once per frame
     void Update() {
+        Vector2 camForward = new Vector2(camera.forward.x, camera.forward.z);
+        camForward.Normalize();
+        Vector2 camRight = new Vector2(camera.right.x, camera.right.z);
+        camRight.Normalize();
+
         // move character
-        latestMoveDirection = new Vector2(
-            Input.GetAxis("Horizontal"),
-            Input.GetAxis("Vertical"));
+        latestMoveDirection = Input.GetAxis("Horizontal") * camRight +
+            Input.GetAxis("Vertical") * camForward;
 
         latestMoveDirection = Vector2.ClampMagnitude(latestMoveDirection, 1f);
     }
@@ -62,14 +68,14 @@ public class PlayerMovementBehaviour : MonoBehaviour {
 
             rigidbody.AddForce(new Vector3(total.x, 0f, total.y), ForceMode.Acceleration);
 
-            Debug.Log("Speed: " + rigidbody.velocity + " (" + curDirectionSpeed + " / " + goalMaxSpeed + ") force added: " + force + " dampening: " + dampenForce);
+            // Debug.Log("Speed: " + rigidbody.velocity + " (" + curDirectionSpeed + " / " + goalMaxSpeed + ") force added: " + force + " dampening: " + dampenForce);
 
         } else {
             Vector2 dampenForce = -velocity.sqrMagnitude * velocity.normalized * directionalDamping;
 
             rigidbody.AddForce(new Vector3(dampenForce.x, 0f, dampenForce.y), ForceMode.Acceleration);
 
-            Debug.Log("Speed: " + rigidbody.velocity + " dampening: " + dampenForce);
+            // Debug.Log("Speed: " + rigidbody.velocity + " dampening: " + dampenForce);
         }
     }
 }
