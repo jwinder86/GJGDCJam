@@ -10,6 +10,8 @@ public class PlantBehaviour : MonoBehaviour {
     public float spawnDistRand = 0.5f;
     public float spawnTime = 1f;
 
+    public AnimationCurve curve;
+
     public bool randomizeYRotation;
 
     public float yScaleRandomization = 0f;
@@ -57,7 +59,7 @@ public class PlantBehaviour : MonoBehaviour {
         transform.localScale = MIN_SCALE_VECTOR;
 
         for (float timer = 0f; timer < spawnTime; timer += Time.deltaTime) {
-            Vector3 scale = Vector3.Lerp(MIN_SCALE_VECTOR, goalScale, timer / spawnTime);
+            Vector3 scale = Vector3.LerpUnclamped(MIN_SCALE_VECTOR, goalScale, curve.Evaluate(timer / spawnTime));
             transform.localScale = scale;
 
             yield return null;
