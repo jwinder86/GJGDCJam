@@ -11,5 +11,7 @@ public class PlantSpawnerVisualizer : MonoBehaviour {
         transform.localPosition = Vector3.zero;
         transform.localScale = Vector3.one;
         transform.localScale = new Vector3(spawner.radius * 2f, spawner.height / 2f, spawner.radius * 2f);
+
+        GetComponent<Renderer>().enabled = spawner.visInEditor;
 	}
 }

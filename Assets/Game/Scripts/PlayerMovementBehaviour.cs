@@ -12,13 +12,23 @@ public class PlayerMovementBehaviour : MonoBehaviour {
     public float moveForce = 3f;
     public float maxSpeed = 5f;
     public float directionalDamping = 0.2f;
+    public float rotationTime = 0.5f;
 
     private Vector2 latestMoveDirection;
+
+    private float yAngle, yAngleVel;
+    private Quaternion tilt;
 
     // Use this for initialization
     void Awake() {
         rigidbody = GetComponent<Rigidbody>();
         camera = Camera.main.transform;
+    }
+
+    void Start() {
+        yAngle = 0f;
+        yAngleVel = 0;
+        tilt = Quaternion.identity;
     }
 
     // Update is called once per frame
@@ -33,6 +43,35 @@ public class PlayerMovementBehaviour : MonoBehaviour {
             Input.GetAxis("Vertical") * camForward;
 
         latestMoveDirection = Vector2.ClampMagnitude(latestMoveDirection, 1f);
+
+        // rotate towards move direction
+        float goalAngle;
+        if (latestMoveDirection.sqrMagnitude > 0f) {
+            goalAngle = 90f - Mathf.Atan2(latestMoveDirection.y, latestMoveDirection.x) * Mathf.Rad2Deg;
+        } else if (Mathf.Abs(yAngleVel) > Helpers.rotationMinSpeed) {
+            goalAngle = yAngle - Helpers.rotationEpsilon * Mathf.Sign(yAngleVel);
+        } else {
+            goalAngle = yAngle;
+            yAngleVel = 0f;
+        }
+
+        yAngle = Mathf.SmoothDampAngle(yAngle, goalAngle, ref yAngleVel, rotationTime);
+
+        // tilt towards force direction
+        Quaternion newGoal;
+        if (latestMoveDirection.sqrMagnitude > 0f) {
+            Vector3 left = new Vector3(-latestMoveDirection.y, 0f, latestMoveDirection.x);
+            left.Normalize();
+            newGoal = Quaternion.AngleAxis(-30f, left);
+        } else {
+            newGoal = Quaternion.identity;
+        }
+
+        tilt = Quaternion.Lerp(tilt, newGoal, Time.deltaTime / rotationTime);
+
+        transform.rotation = Quaternion.identity;
+        transform.Rotate(Vector3.up, yAngle, Space.World);
+        transform.rotation = tilt * transform.rotation;
     }
 
     void FixedUpdate() {

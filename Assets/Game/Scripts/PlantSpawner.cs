@@ -10,6 +10,8 @@ public class PlantSpawner : MonoBehaviour {
     public float radius = 1f;
     public float minDist = 0.5f;
 
+    public bool visInEditor;
+
 	// Use this for initialization
 	void Start () {
         PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
@@ -21,8 +23,11 @@ public class PlantSpawner : MonoBehaviour {
 
             RaycastHit hit;
             if (Physics.Raycast(pos, Vector3.down, out hit, height)) {
-                PlantBehaviour plant = (PlantBehaviour) Instantiate(prefab, pos + hit.distance * Vector3.down, Quaternion.identity);
-                plant.SetNormal(hit.normal);
+                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground")) {
+                    PlantBehaviour plant = (PlantBehaviour)Instantiate(prefab, pos + hit.distance * Vector3.down, Quaternion.identity);
+                    plant.transform.parent = transform;
+                    plant.SetNormal(hit.normal);
+                }
             }
             
         }

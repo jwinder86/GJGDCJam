@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3376554}
   - 65: {fileID: 6560458}
   - 23: {fileID: 2330928}
-  - 114: {fileID: 11410626}
+  - 114: {fileID: 11487490}
   m_Layer: 0
   m_Name: TestPlant
   m_TagString: Untagged
@@ -41,7 +41,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: ea07249bdd13e8c4b9c9d586e56c0b33, type: 2}
+  - {fileID: 2100000, guid: 99420546dababa14b82dbcfbae0cb1e2, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 0
@@ -76,7 +76,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &11410626
+--- !u!114 &11487490
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -84,12 +84,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 126292}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f2f2f158ae56b9c4fba6fb5a35df5994, type: 3}
+  m_Script: {fileID: 11500000, guid: 2b6971ecb769fc84288f54d71a27ddb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDist: 13
+  spawnDist: 12
   spawnDistRand: 0.6
   spawnTime: 0.5
+  randomizeYRotation: 1
   curve:
     serializedVersion: 2
     m_Curve:
@@ -106,8 +107,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  randomizeYRotation: 1
-  yScaleRandomization: 0.3
+  yScaleRandomization: 0.5
   renderer: {fileID: 2330928}
 --- !u!1001 &100100000
 Prefab:
@@ -127,14 +127,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: 2100000, guid: ea07249bdd13e8c4b9c9d586e56c0b33, type: 2}
+      objectReference: {fileID: 2100000, guid: 99420546dababa14b82dbcfbae0cb1e2, type: 2}
     - target: {fileID: 0}
       propertyPath: randomizeYRotation
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: yScaleRandomization
-      value: 0.3
+      value: 0.5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_UseLightProbes
@@ -150,7 +150,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnDist
-      value: 13
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: curve.m_RotationOrder
@@ -180,6 +180,14 @@ Prefab:
       propertyPath: curve.m_Curve.Array.data[1].tangentMode
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: spawnTime
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: renderer
+      value: 
+      objectReference: {fileID: 2330928}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 126292}

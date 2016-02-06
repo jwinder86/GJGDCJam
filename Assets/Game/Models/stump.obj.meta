@@ -1,36 +1,21 @@
 fileFormatVersion: 2
-guid: 0587206b3b8216247967b699563361ae
-timeCreated: 1454716301
+guid: 2fb1e54493e103b4fa712f76345fec55
+timeCreated: 1454784863
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: image1_default
-    100004: image1_image
-    100006: image2_Splotches
-    100008: image2_transparency_ip
-    400000: //RootNode
-    400002: image1_default
-    400004: image1_image
-    400006: image2_Splotches
-    400008: image2_transparency_ip
-    2300000: image1_default
-    2300002: image1_image
-    2300004: image2_Splotches
-    2300006: image2_transparency_ip
-    3300000: image1_default
-    3300002: image1_image
-    3300004: image2_Splotches
-    3300006: image2_transparency_ip
-    4300000: image1_default
-    4300002: image1_image
-    4300004: image2_Splotches
-    4300006: image2_transparency_ip
+    100000: Cylinder1_default
+    100002: //RootNode
+    400000: Cylinder1_default
+    400002: //RootNode
+    2300000: Cylinder1_default
+    3300000: Cylinder1_default
+    4300000: Cylinder1_default
   materials:
     importMaterials: 0
     materialName: 0
-    materialSearch: 0
+    materialSearch: 1
   animations:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
