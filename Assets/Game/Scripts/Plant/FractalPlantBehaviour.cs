@@ -30,6 +30,8 @@ public class FractalPlantBehaviour : PlantBehaviour {
             r.enabled = false;
         }
 
+        root.LerpScaleRecursive(0f);
+
         goalScale = transform.localScale;
     }
 

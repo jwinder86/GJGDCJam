@@ -19,6 +19,16 @@ public class PlayerMovementBehaviour : MonoBehaviour {
     private float yAngle, yAngleVel;
     private Quaternion tilt;
 
+    public float Heading {
+        get { return yAngle; }
+    }
+
+    public void InitializeAngles(float heading) {
+        yAngle = heading;
+        yAngleVel = 0f;
+        tilt = Quaternion.identity;
+    }
+
     // Use this for initialization
     void Awake() {
         rigidbody = GetComponent<Rigidbody>();

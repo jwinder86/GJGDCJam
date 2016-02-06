@@ -48,5 +48,11 @@ public class PlayerCameraBehaviour : MonoBehaviour {
         camera.position = newCamPosition;
 
         camera.LookAt(transform.position);
+
+        // Flight mode
+        /*camera.position = transform.position + transform.TransformDirection(cameraOffset);
+        camera.LookAt(transform.position + transform.TransformDirection(targetLookOffset));
+
+        transform.Rotate(transform.forward, target.Roll * -rollPercentage, Space.World);*/
     }
 }
