@@ -1,17 +1,17 @@
 fileFormatVersion: 2
-guid: de12e62cf6599784bafe8f1f28c44eed
-timeCreated: 1454721914
+guid: d817bb201277d374ca52f1d30016de0e
+timeCreated: 1454810731
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: //RootNode
-    100002: Cylinder1_default
-    400000: //RootNode
-    400002: Cylinder1_default
-    2300000: Cylinder1_default
-    3300000: Cylinder1_default
-    4300000: Cylinder1_default
+    100000: F3:GeoDome5_default
+    100002: //RootNode
+    400000: F3:GeoDome5_default
+    400002: //RootNode
+    2300000: F3:GeoDome5_default
+    3300000: F3:GeoDome5_default
+    4300000: F3:GeoDome5_default
   materials:
     importMaterials: 0
     materialName: 0
@@ -36,7 +36,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 40
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 0
@@ -53,7 +53,7 @@ ModelImporter:
     useFileScale: 1
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
+    normalImportMode: 1
     tangentImportMode: 3
   importAnimation: 0
   copyAvatar: 0

@@ -165,7 +165,7 @@ public class FractalPlantComponent : MonoBehaviour {
     private bool validateTermPosition(Vector3 worldPos, float minDist, List<Vector3> termPositions) {
         foreach (Vector3 pos in termPositions) {
             if ((pos - worldPos).magnitude < minDist) {
-                Debug.Log("Too close to existing terminal node");
+                //Debug.Log("Too close to existing terminal node");
                 return false;
             }
         }

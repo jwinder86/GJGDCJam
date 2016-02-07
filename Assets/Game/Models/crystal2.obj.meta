@@ -1,17 +1,27 @@
 fileFormatVersion: 2
-guid: de12e62cf6599784bafe8f1f28c44eed
-timeCreated: 1454721914
+guid: c900f60624bdda74fbad14452959932b
+timeCreated: 1454814181
 licenseType: Free
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
     100000: //RootNode
     100002: Cylinder1_default
+    100004: Cylinder2_default
+    100006: Cylinder3_default
     400000: //RootNode
     400002: Cylinder1_default
+    400004: Cylinder2_default
+    400006: Cylinder3_default
     2300000: Cylinder1_default
+    2300002: Cylinder2_default
+    2300004: Cylinder3_default
     3300000: Cylinder1_default
+    3300002: Cylinder2_default
+    3300004: Cylinder3_default
     4300000: Cylinder1_default
+    4300002: Cylinder2_default
+    4300004: Cylinder3_default
   materials:
     importMaterials: 0
     materialName: 0
@@ -36,7 +46,7 @@ ModelImporter:
     isReadable: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: 0.5
+    globalScale: 1
     meshCompression: 0
     addColliders: 0
     importBlendShapes: 0

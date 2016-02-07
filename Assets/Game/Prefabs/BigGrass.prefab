@@ -13,7 +13,7 @@ GameObject:
   - 23: {fileID: 2330928}
   - 114: {fileID: 11487490}
   m_Layer: 0
-  m_Name: TestPlant
+  m_Name: BigGrass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

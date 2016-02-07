@@ -6,26 +6,12 @@ public class PoissonDiskSampler {
 
     private float radius;
     private float minDist;
-    //private float cellSize;
-    //private int cellDim;
     private int k;
-    //private int[,] spacialLookup;
 	
     public PoissonDiskSampler(float radius, float minDist, int k = 30) {
         this.radius = radius;
         this.minDist = minDist;
         this.k = k;
-
-        // initialize lookup table
-        /*cellSize = minDist / Mathf.Sqrt(size);
-        cellDim = Mathf.CeilToInt(size / cellSize);
-        spacialLookup = new int[cellDim, cellDim];
-
-        for (int x = 0; x < cellDim; x++) {
-            for (int z = 0; z < cellDim; z++) {
-                spacialLookup[x, z] = -1;
-            }
-        }*/
     }
 
     public List<Vector2> generateSamples() {
@@ -88,4 +74,48 @@ public class PoissonDiskSampler {
         list[i] = list[j];
         list[j] = temp;
     }
+
+    /*private class SpacialLookup {
+        private float cellSize;
+        private bool[,] data;
+        private int halfDim;
+
+        public SpacialLookup(float radius, float minDist) {
+            cellSize = minDist / Mathf.Sqrt(2f);
+
+            halfDim = Mathf.CeilToInt(radius / cellSize);
+            int dim = halfDim * 2;
+
+            data = new bool[dim, dim];
+
+            for (int i = 0; i < dim; i++) {
+                for (int j = 0; j < dim; j++) {
+                    data[i, j] = false;
+                }
+            }
+        }
+
+        public bool Contains(Vector2 pos) {
+            return data[
+                posToIndex(pos.x),
+                posToIndex(pos.y)];
+        }
+
+        public void Insert(Vector2 pos) {
+            data[
+                posToIndex(pos.x),
+                posToIndex(pos.y)] = true;
+        }
+
+        private int posToIndex(float pos) {
+            int index = Mathf.FloorToInt(pos / cellSize) + halfDim;
+
+            if (index < 0 || index > data.Length) {
+                Debug.LogError("Bad index " + index + " from pos " + pos + " halfDim " + halfDim);
+                return 0;
+            } else {
+                return index;
+            }
+        }
+    }*/
 }
