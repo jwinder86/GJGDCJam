@@ -10,13 +10,19 @@ public class FractalPlantBehaviour : PlantBehaviour {
 
     public AnimationCurve curve;
 
+    public int height = 6;
+
     private FractalPlantComponent root;
     private List<Renderer> renderers;
 
     private Vector3 goalScale;
 
+    new private AudioSource audio;
+
     new void Awake() {
         base.Awake();
+
+        audio = GetComponent<AudioSource>();
 
         GeneratePlant();
         renderers = new List<Renderer>(root.Count());
@@ -40,6 +46,10 @@ public class FractalPlantBehaviour : PlantBehaviour {
     }
 
     protected override IEnumerator SpawnRoutine() {
+        if (audio != null) {
+            audio.Play();
+        }
+
         foreach (Renderer r in renderers) {
             r.enabled = true;
         }
@@ -70,6 +80,6 @@ public class FractalPlantBehaviour : PlantBehaviour {
 
         List<Vector3> termPositions = new List<Vector3>();
 
-        root.GenerateRecursive(1, middlePrefab, topPrefab, ref termPositions);
+        root.GenerateRecursive(height, middlePrefab, topPrefab, ref termPositions);
     }
 }

@@ -10,9 +10,9 @@ GameObject:
   - 4: {fileID: 444118}
   - 33: {fileID: 3387850}
   - 114: {fileID: 11482808}
-  - 82: {fileID: 8220702}
+  - 82: {fileID: 8236158}
   m_Layer: 0
-  m_Name: GreenTree
+  m_Name: BigGreenTree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -26,7 +26,7 @@ Transform:
   m_GameObject: {fileID: 180168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -6.29, y: 3.69, z: 11.88}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 3, y: 3, z: 3}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -37,7 +37,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180168}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!82 &8220702
+--- !u!82 &8236158
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -127,7 +127,7 @@ MonoBehaviour:
   spawnTime: 2
   bottomPrefab: {fileID: 11443020, guid: bacd054fc0ae69d49b42758592fd20e0, type: 2}
   middlePrefab: {fileID: 11448124, guid: 752e23548cef47f418df72440fbfc661, type: 2}
-  topPrefab: {fileID: 11447714, guid: 0a1a57c3c3b9af64daab212ad7090137, type: 2}
+  topPrefab: {fileID: 11447714, guid: 065af413708fe9049abd5d6ea5829a42, type: 2}
   curve:
     serializedVersion: 2
     m_Curve:
@@ -144,7 +144,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
-  height: 4
+  height: 5
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -158,15 +158,15 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.x
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.y
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: m_LocalScale.z
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: curve.m_RotationOrder
@@ -186,24 +186,17 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: height
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 0}
-      propertyPath: panLevelCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 0}
-      propertyPath: reverbZoneMixCustomCurve.m_RotationOrder
-      value: 0
-      objectReference: {fileID: 0}
+      propertyPath: topPrefab
+      value: 
+      objectReference: {fileID: 11447714, guid: 065af413708fe9049abd5d6ea5829a42,
+        type: 2}
     - target: {fileID: 0}
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: b1a2f251a1a107a4fb85364e2012e619, type: 3}
-    - target: {fileID: 0}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180168}

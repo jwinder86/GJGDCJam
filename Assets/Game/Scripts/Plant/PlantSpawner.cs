@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PlantSpawner : MonoBehaviour {
 
     public PlantBehaviour[] prefabs;
+    public bool randomPrefab = false;
 
     public float height = 1f;
     public float radius = 1f;
@@ -19,16 +20,20 @@ public class PlantSpawner : MonoBehaviour {
         PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
         List<Vector2> samples = sampler.generateSamples();
 
-        float rot = 0f;
-        foreach (PlantBehaviour prefab in prefabs) {
-            Quaternion rotAdjust = Quaternion.AngleAxis(rot, Vector3.up);
-            GeneratePlants(prefab, samples, rotAdjust);
+        if (randomPrefab) {
+            GeneratePlants(prefabs, samples, Quaternion.identity);
+        } else {
+            float rot = 0f;
+            foreach (PlantBehaviour prefab in prefabs) {
+                Quaternion rotAdjust = Quaternion.AngleAxis(rot, Vector3.up);
+                GeneratePlants(new PlantBehaviour[] { prefab }, samples, rotAdjust);
 
-            rot += 360f / prefabs.Length;
+                rot += 360f / prefabs.Length;
+            }
         }
     }
 
-	void GeneratePlants(PlantBehaviour prefab, List<Vector2> samples, Quaternion rotAdjust) {
+	void GeneratePlants(PlantBehaviour[] selectedPrefabs, List<Vector2> samples, Quaternion rotAdjust) {
         Debug.Log("Sample count: " + samples.Count);
 
         for (int i = 0; i < samples.Count; i++) {
@@ -40,7 +45,7 @@ public class PlantSpawner : MonoBehaviour {
             if (Physics.Raycast(worldPos, -transform.up, out hit, height)) {
                 if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") && 
                     Vector3.Angle(transform.up, hit.normal) <= maxAngle) {
-                    PlantBehaviour plant = (PlantBehaviour)Instantiate(prefab, worldPos + hit.distance * -transform.up, Quaternion.identity);
+                    PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), worldPos + hit.distance * -transform.up, Quaternion.identity);
                     plant.transform.parent = transform;
                     plant.SetNormal(hit.normal);
                 }
@@ -54,4 +59,8 @@ public class PlantSpawner : MonoBehaviour {
         }
         
 	}
+
+    PlantBehaviour ChoosePrefab(PlantBehaviour[] prefabs) {
+        return prefabs[Random.Range(0, prefabs.Length)];
+    }
 }
