@@ -17,7 +17,7 @@ public class PlayerHoverBehaviour : MonoBehaviour {
     new private Rigidbody rigidbody;
 
 	void Awake () {
-        layerMask = ~(1 << LayerMask.NameToLayer("Player"));
+        layerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("BoidObstacle") | 1 << LayerMask.NameToLayer("Boid"));
         antiGravForce = -Physics.gravity.y;
         rigidbody = GetComponent<Rigidbody>();
     }

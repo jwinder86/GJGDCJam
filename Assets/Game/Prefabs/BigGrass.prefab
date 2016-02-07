@@ -90,6 +90,7 @@ MonoBehaviour:
   spawnDist: 12
   spawnDistRand: 0.6
   spawnTime: 0.5
+  maxRenderDist: 50
   randomizeYRotation: 1
   curve:
     serializedVersion: 2
@@ -188,6 +189,10 @@ Prefab:
       propertyPath: renderer
       value: 
       objectReference: {fileID: 2330928}
+    - target: {fileID: 0}
+      propertyPath: maxRenderDist
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 126292}

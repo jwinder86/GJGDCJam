@@ -125,6 +125,7 @@ MonoBehaviour:
   spawnDist: 12
   spawnDistRand: 0.6
   spawnTime: 2
+  maxRenderDist: 400
   bottomPrefab: {fileID: 11443020, guid: bacd054fc0ae69d49b42758592fd20e0, type: 2}
   middlePrefab: {fileID: 11448124, guid: 752e23548cef47f418df72440fbfc661, type: 2}
   topPrefab: {fileID: 11447714, guid: 3477a8584c98ef3459db19aa946121ab, type: 2}
@@ -197,6 +198,10 @@ Prefab:
       propertyPath: m_audioClip
       value: 
       objectReference: {fileID: 8300000, guid: b1a2f251a1a107a4fb85364e2012e619, type: 3}
+    - target: {fileID: 0}
+      propertyPath: maxRenderDist
+      value: 400
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 180168}

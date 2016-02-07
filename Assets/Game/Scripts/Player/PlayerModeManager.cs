@@ -12,6 +12,10 @@ public class PlayerModeManager : MonoBehaviour {
     public float transitionTime;
     public float transitionDrag;
 
+    public float hardHitSpeed = 10f;
+    public AudioClip hitHard;
+    public ParticleBehaviour hitParticlePrefab;
+
     private PlayerMode mode;
     public PlayerMode Mode {
         get { return mode; }
@@ -24,6 +28,7 @@ public class PlayerModeManager : MonoBehaviour {
     private float defaultDrag;
 
     private Animator animator;
+    new private AudioSource audio;
 
     void Awake() {
         //hover = GetComponent<PlayerHoverBehaviour>();
@@ -32,6 +37,7 @@ public class PlayerModeManager : MonoBehaviour {
         rigidbody = GetComponent<Rigidbody>();
 
         animator = GetComponentInChildren<Animator>();
+        audio = GetComponent<AudioSource>();
     }
 
 	// Use this for initialization
@@ -50,10 +56,31 @@ public class PlayerModeManager : MonoBehaviour {
 	    if (Input.GetKeyDown("joystick button 1")) {
             setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
         }
+
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            StartCoroutine(ExitRoutine());
+        }
 	}
 
+    private IEnumerator ExitRoutine() {
+        FadeBehaviour fade = FindObjectOfType<FadeBehaviour>();
+        fade.FadeOut();
+
+        yield return new WaitForSeconds(fade.fadeTime * 1.1f);
+
+        Application.LoadLevel("TitleScene");
+    }
+
     void OnCollisionEnter(Collision collision) {
-        if (mode == PlayerMode.Flight) {
+        if (mode == PlayerMode.Flight && collision.relativeVelocity.magnitude >= hardHitSpeed) {
+            audio.PlayOneShot(hitHard);
+            rigidbody.velocity = -collision.relativeVelocity;
+
+            if (collision.contacts.Length > 0) {
+                ContactPoint p = collision.contacts[0];
+                Instantiate(hitParticlePrefab, p.point, Quaternion.LookRotation(p.normal));
+            }
+
             setMode(PlayerMode.Hover);
         }
     }

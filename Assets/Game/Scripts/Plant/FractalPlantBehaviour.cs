@@ -15,12 +15,9 @@ public class FractalPlantBehaviour : PlantBehaviour {
     private FractalPlantComponent root;
     private List<Renderer> renderers;
 
-    private Vector3 goalScale;
-
     new private AudioSource audio;
 
-    new void Awake() {
-        base.Awake();
+    void Awake() {
 
         audio = GetComponent<AudioSource>();
 
@@ -32,26 +29,22 @@ public class FractalPlantBehaviour : PlantBehaviour {
     new void Start() {
         base.Start();
 
-        foreach (Renderer r in renderers) {
-            r.enabled = false;
-        }
-
         root.LerpScaleRecursive(0f);
-
-        goalScale = transform.localScale;
     }
 
     public override void SetNormal(Vector3 normal) {
         // do nothing
     }
 
+    protected override void EnableRender(bool render) {
+        foreach (Renderer r in renderers) {
+            r.enabled = render;
+        }
+    }
+
     protected override IEnumerator SpawnRoutine() {
         if (audio != null) {
             audio.Play();
-        }
-
-        foreach (Renderer r in renderers) {
-            r.enabled = true;
         }
 
         root.LerpScaleRecursive(0f);
@@ -63,8 +56,6 @@ public class FractalPlantBehaviour : PlantBehaviour {
         }
 
         root.LerpScaleRecursive(1f);
-
-        this.enabled = false;
     }
 
     private void GeneratePlant() {

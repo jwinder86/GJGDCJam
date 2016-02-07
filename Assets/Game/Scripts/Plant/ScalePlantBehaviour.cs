@@ -17,8 +17,6 @@ public class ScalePlantBehaviour : PlantBehaviour {
     new void Start () {
         base.Start();
 
-        renderer.enabled = false;
-
         // rotate about upward axis
         if (randomizeYRotation) {
             transform.Rotate(Vector3.up, Random.Range(0f, 360f), Space.Self);
@@ -32,8 +30,11 @@ public class ScalePlantBehaviour : PlantBehaviour {
         transform.rotation *= Quaternion.FromToRotation(Vector3.up, normal);
     }
 
+    protected override void EnableRender(bool render) {
+        renderer.enabled = render;
+    }
+
     protected override IEnumerator SpawnRoutine() {
-        renderer.enabled = true;
         transform.localScale = MIN_SCALE_VECTOR;
 
         for (float timer = 0f; timer < spawnTime; timer += Time.deltaTime) {
@@ -44,7 +45,5 @@ public class ScalePlantBehaviour : PlantBehaviour {
         }
 
         transform.localScale = goalScale;
-
-        this.enabled = false;
     }
 }

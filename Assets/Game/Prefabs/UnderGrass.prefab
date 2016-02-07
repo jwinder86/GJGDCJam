@@ -25,7 +25,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 481130}
-  - 114: {fileID: 11437104}
+  - 114: {fileID: 11413588}
   m_Layer: 0
   m_Name: UnderGrass
   m_TagString: Untagged
@@ -91,7 +91,7 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 129346}
   m_Mesh: {fileID: 4300004, guid: 0587206b3b8216247967b699563361ae, type: 3}
---- !u!114 &11437104
+--- !u!114 &11413588
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -99,31 +99,34 @@ MonoBehaviour:
   m_GameObject: {fileID: 138178}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2b6971ecb769fc84288f54d71a27ddb9, type: 3}
+  m_Script: {fileID: 11500000, guid: ee45dc36c5e9fd64cbae106c67c0a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   spawnDist: 12
   spawnDistRand: 0.5
   spawnTime: 0.5
+  maxRenderDist: 300
   randomizeYRotation: 1
   curve:
     serializedVersion: 2
     m_Curve:
     - time: 0
       value: 0
-      inSlope: 2
-      outSlope: 2
+      inSlope: 0.45281246
+      outSlope: 0.45281246
       tangentMode: 0
     - time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
+      inSlope: -1.5878175
+      outSlope: -1.5878175
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
   yScaleRandomization: 0
   renderer: {fileID: 2340874}
+  lodDist: 150
+  farDistMaterial: {fileID: 2100000, guid: 864c55f65a6f2df4db6e2cc7472b74f2, type: 2}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -203,6 +206,18 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 927127f2ec02e7c4bbdbc1f35b9b475a, type: 2}
+    - target: {fileID: 0}
+      propertyPath: maxRenderDist
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: farDistMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 864c55f65a6f2df4db6e2cc7472b74f2, type: 2}
+    - target: {fileID: 0}
+      propertyPath: lodDist
+      value: 150
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 138178}

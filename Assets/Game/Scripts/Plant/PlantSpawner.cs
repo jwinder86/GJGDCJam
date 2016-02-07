@@ -15,8 +15,21 @@ public class PlantSpawner : MonoBehaviour {
 
     public bool visInEditor;
 
-	// Use this for initialization
+    public int updateFrames = 10;
+    private int curUpdateFrame = 0;
+
+    private PlayerMovementBehaviour player;
+    private List<PlantBehaviour> plants;
+    private float updateRadius;
+
+    void Awake() {
+        player = FindObjectOfType<PlayerMovementBehaviour>();
+    }
+
+    // Use this for initialization
     void Start() {
+        plants = new List<PlantBehaviour>();
+
         PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
         List<Vector2> samples = sampler.generateSamples();
 
@@ -30,6 +43,30 @@ public class PlantSpawner : MonoBehaviour {
 
                 rot += 360f / prefabs.Length;
             }
+        }
+
+        // calc update radius
+        updateRadius = radius;
+        foreach (PlantBehaviour prefab in prefabs) {
+            float prefabRadius = radius + prefab.spawnDist * (1f + prefab.spawnDistRand);
+            radius = Mathf.Max(radius, prefabRadius);
+        }
+    }
+
+    void Update() {
+        Vector3 playerPos = player.transform.position;
+        float playerDist = (transform.position - playerPos).magnitude;
+
+        if (playerDist < updateRadius) {
+            for (int i = 0; i < plants.Count; i++) {
+                plants[i].UpdatePlayerPos(playerPos);
+            }
+        } else {
+            for (int i = curUpdateFrame; i < plants.Count; i += updateFrames) {
+                plants[i].UpdatePlayerPos(playerPos);
+            }
+            curUpdateFrame++;
+            curUpdateFrame = curUpdateFrame % updateFrames;
         }
     }
 
@@ -48,6 +85,8 @@ public class PlantSpawner : MonoBehaviour {
                     PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), worldPos + hit.distance * -transform.up, Quaternion.identity);
                     plant.transform.parent = transform;
                     plant.SetNormal(hit.normal);
+
+                    plants.Add(plant);
                 }
             }
         }
