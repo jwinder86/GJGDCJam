@@ -112,7 +112,7 @@ public class PlayerFlightBehaviour : MonoBehaviour {
         Vector3 verForce = CalculateNormalDrag(-rigidbody.velocity, transform.up) * verticalCoef;
         Vector3 horForce = CalculateNormalDrag(-rigidbody.velocity, transform.right) * horizontalCoef;
         Vector3 dragForce = CalculateDragForce(rigidbody.velocity) * dragCoef;
-        Vector3 thrustForce = thrust * transform.forward * (!Input.GetButton("Jump") ? 1f : 0f);
+        Vector3 thrustForce = thrust * transform.forward;// * (!Input.GetButton("Jump") ? 1f : 0f);
 
         // draw gizmos
         DrawGizmo(verForce, Color.green);

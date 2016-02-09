@@ -33,7 +33,8 @@ public class SpeedVolumeBehaviour : MonoBehaviour {
         vol = Mathf.Clamp01(vol);
 
         audio.volume = vol;
+        audio.pitch = 1f + vol;
 
-        Debug.Log("Speed: " + avgVelocity + " Range: [" + minVelocity + ", " + maxVelocity + "] Volume: " + vol);
+        //Debug.Log("Speed: " + avgVelocity + " Range: [" + minVelocity + ", " + maxVelocity + "] Volume: " + vol);
 	}
 }

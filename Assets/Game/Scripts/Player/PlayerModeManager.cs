@@ -16,10 +16,16 @@ public class PlayerModeManager : MonoBehaviour {
     public AudioClip hitHard;
     public ParticleBehaviour hitParticlePrefab;
 
+    public float minHeight = -150f;
+    public float maxHeight = 500f;
+
     private PlayerMode mode;
     public PlayerMode Mode {
         get { return mode; }
     }
+
+    private Vector3 spawnPos;
+    private Quaternion spawnAngle;
 
     //private PlayerHoverBehaviour hover;
     private PlayerMovementBehaviour hoverMove;
@@ -29,6 +35,8 @@ public class PlayerModeManager : MonoBehaviour {
 
     private Animator animator;
     new private AudioSource audio;
+
+    private bool paused;
 
     void Awake() {
         //hover = GetComponent<PlayerHoverBehaviour>();
@@ -48,21 +56,57 @@ public class PlayerModeManager : MonoBehaviour {
         animator.SetBool("Flying", false);
 
         defaultDrag = rigidbody.drag;
+
+        spawnPos = transform.position;
+        spawnAngle = transform.rotation;
+
+        paused = false;
 	}
 	
 	// Update is called once per frame
 	void Update () {
+        if (paused) {
+            return;
+        }
+
         // manual toggle
-	    if (Input.GetKeyDown("joystick button 1")) {
+	    if (Input.GetButtonDown("ToggleFly")) {
             setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
         }
 
         if (Input.GetKeyDown(KeyCode.Escape)) {
             StartCoroutine(ExitRoutine());
         }
+
+        if (transform.position.y < minHeight || transform.position.y > maxHeight) {
+            StartCoroutine(ResetRoutine());
+        }
 	}
 
+    private IEnumerator ResetRoutine() {
+        paused = true;
+
+        StartCoroutine(ChangeMode(PlayerMode.Hover));
+        
+        FadeBehaviour fade = FindObjectOfType<FadeBehaviour>();
+        fade.FadeOut();
+
+        yield return new WaitForSeconds(fade.fadeTime);
+
+        transform.position = spawnPos;
+        transform.rotation = spawnAngle;
+        rigidbody.velocity = Vector3.zero;
+
+        fade.FadeIn();
+
+        yield return new WaitForSeconds(fade.fadeTime);
+
+        paused = false;
+    }
+
     private IEnumerator ExitRoutine() {
+        paused = true;
+
         FadeBehaviour fade = FindObjectOfType<FadeBehaviour>();
         fade.FadeOut();
 
