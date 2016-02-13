@@ -102,10 +102,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ee45dc36c5e9fd64cbae106c67c0a144, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDist: 12
+  spawnDist: 20
   spawnDistRand: 0.5
   spawnTime: 0.5
-  maxRenderDist: 300
+  maxRenderDist: 400
   randomizeYRotation: 1
   curve:
     serializedVersion: 2
@@ -184,7 +184,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnDist
-      value: 12
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnDistRand
@@ -208,7 +208,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 927127f2ec02e7c4bbdbc1f35b9b475a, type: 2}
     - target: {fileID: 0}
       propertyPath: maxRenderDist
-      value: 300
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: farDistMaterial

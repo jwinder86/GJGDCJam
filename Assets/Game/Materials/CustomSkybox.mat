@@ -7,10 +7,10 @@ Material:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_Name: CustomSkybox
-  m_Shader: {fileID: 106, guid: 0000000000000000f000000000000000, type: 0}
+  m_Shader: {fileID: 4800000, guid: e62beaebaf9ec4da8ae22bfefe5cbb79, type: 3}
   m_ShaderKeywords: _SUNDISK_HIGH_QUALITY
   m_LightmapFlags: 5
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 1000
   stringTagMap: {}
   m_SavedProperties:
     serializedVersion: 2
@@ -32,6 +32,38 @@ Material:
         first:
           name: _AtmosphereThickness
         second: 1
+      data:
+        first:
+          name: _SkyExponent1
+        second: 8.5
+      data:
+        first:
+          name: _SkyExponent2
+        second: 3
+      data:
+        first:
+          name: _SkyIntensity
+        second: 1
+      data:
+        first:
+          name: _SunIntensity
+        second: 2
+      data:
+        first:
+          name: _SunAlpha
+        second: 550
+      data:
+        first:
+          name: _SunBeta
+        second: 1
+      data:
+        first:
+          name: _SunAzimuth
+        second: 150
+      data:
+        first:
+          name: _SunAltitude
+        second: 50
     m_Colors:
       data:
         first:
@@ -40,4 +72,24 @@ Material:
       data:
         first:
           name: _GroundColor
-        second: {r: 0.51011795, g: 0.5663347, b: 0.581, a: 1}
+        second: {r: 0.369, g: 0.349, b: 0.341, a: 1}
+      data:
+        first:
+          name: _SkyColor1
+        second: {r: 0.37, g: 0.52, b: 0.73, a: 0}
+      data:
+        first:
+          name: _SkyColor2
+        second: {r: 0.89, g: 0.96, b: 1, a: 0}
+      data:
+        first:
+          name: _SkyColor3
+        second: {r: 0.89, g: 0.89, b: 0.89, a: 0}
+      data:
+        first:
+          name: _SunColor
+        second: {r: 1, g: 0.99, b: 0.87, a: 1}
+      data:
+        first:
+          name: _SunVector
+        second: {r: 0.32139385, g: 0.76604444, b: -0.5566704, a: 0}

@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(Rigidbody))]
 public class PlayerHoverBehaviour : MonoBehaviour {
 
     public float hoverHeight;
@@ -14,17 +13,17 @@ public class PlayerHoverBehaviour : MonoBehaviour {
 
     private int layerMask;
     private float antiGravForce;
-    new private Rigidbody rigidbody;
+    private PlayerPhysicsBehaviour phys;
 
 	void Awake () {
-        layerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("BoidObstacle") | 1 << LayerMask.NameToLayer("Boid"));
+        layerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("BoidObstacle") | 1 << LayerMask.NameToLayer("Boid") | 1 << LayerMask.NameToLayer("PlantObstacle"));
         antiGravForce = -Physics.gravity.y;
-        rigidbody = GetComponent<Rigidbody>();
+        phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
     }
 	
 	void FixedUpdate () {
         RaycastHit hit;
-        if (Physics.SphereCast(transform.position, sphereCastRadius, Vector3.down, out hit, antigravHeight, layerMask)) {
+        if (Physics.SphereCast(phys.position, sphereCastRadius, Vector3.down, out hit, antigravHeight, layerMask)) {
             float force;
             float dampenMult;
             if (hit.distance > hoverHeight) {
@@ -36,10 +35,10 @@ public class PlayerHoverBehaviour : MonoBehaviour {
             }
 
             // dampen y velocity
-            float yVel = rigidbody.velocity.y;
+            float yVel = phys.absoluteVelocity.y;
             float yDamp = yVel * yVel * yVelDampen * Mathf.Sign(yVel) * dampenMult;
 
-            rigidbody.AddForce(new Vector3(0f, force - yDamp, 0f), ForceMode.Acceleration);
+            phys.AddForce(new Vector3(0f, force - yDamp, 0f), ForceMode.Acceleration);
             //Debug.Log("Dist: " + hit.distance + ", Accel applied: " + (force - yDamp) + ", Y speed " + rigidbody.velocity.y);
         } else {
             //Debug.Log("No force applied");

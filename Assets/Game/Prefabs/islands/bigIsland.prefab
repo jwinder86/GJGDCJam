@@ -317,7 +317,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 106706}
   m_LocalRotation: {x: 0, y: 0.9473268, z: 0, w: 0.32026872}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 57, y: 132, z: 543}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 435142}
@@ -333,7 +333,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 113576}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 0
   m_ReceiveShadows: 0
   m_Materials:
@@ -470,7 +470,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 169730}
-  m_Mesh: {fileID: 4300000, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
+  m_Mesh: {fileID: 4300002, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
 --- !u!33 &3360192
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -503,7 +503,7 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Convex: 0
-  m_Mesh: {fileID: 4300000, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
+  m_Mesh: {fileID: 4300002, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
 --- !u!114 &11402262
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -544,6 +544,7 @@ MonoBehaviour:
   radius: 32
   minDist: 20
   maxAngle: 15
+  minOnePlant: 0
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11423172
@@ -566,6 +567,7 @@ MonoBehaviour:
   radius: 32
   minDist: 15
   maxAngle: 15
+  minOnePlant: 0
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11431838
@@ -588,6 +590,7 @@ MonoBehaviour:
   radius: 36
   minDist: 4
   maxAngle: 15
+  minOnePlant: 0
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11451596
@@ -613,7 +616,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   radius: 45
-  visualize: 1
+  visualize: 0
 --- !u!114 &11491944
 MonoBehaviour:
   m_ObjectHideFlags: 1

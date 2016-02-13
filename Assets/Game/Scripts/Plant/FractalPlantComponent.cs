@@ -27,9 +27,26 @@ public class FractalPlantComponent : MonoBehaviour {
 
     private Vector3 goalScale;
 
-	public void GenerateRecursive(int level, FractalPlantComponent selfPrefab, FractalPlantComponent termPrefab, ref List<Vector3> termPositions) {
+	public void GenerateRecursive(int level, int maxRendererLevel, FractalPlantComponent selfPrefab, FractalPlantComponent termPrefab, ref List<Vector3> termPositions) {
 
         goalScale = transform.localScale;
+
+        // higher levels are transform only
+        if (level < maxRendererLevel) {
+            Renderer r = GetComponentInChildren<Renderer>();
+            if (r.gameObject == gameObject) {
+                DestroyImmediate(r);
+            } else {
+                DestroyImmediate(r.gameObject);
+            }
+
+            Collider c = GetComponentInChildren<Collider>();
+            if (c.gameObject == gameObject) {
+                Destroy(c);
+            } else {
+                Destroy(c.gameObject);
+            }
+        }
 
         // rotate about upward axis
         if (randomizeYRotation) {
@@ -43,7 +60,7 @@ public class FractalPlantComponent : MonoBehaviour {
 
         // recurse
         if (level > 0) {
-            InstantiateChildren(level, selfPrefab, termPrefab, ref termPositions);
+            InstantiateChildren(level, maxRendererLevel, selfPrefab, termPrefab, ref termPositions);
         } else {
             InstantiateTerminalComponent(level, termPrefab, ref termPositions);
         }
@@ -55,7 +72,7 @@ public class FractalPlantComponent : MonoBehaviour {
         }
     }
 
-    private void InstantiateChildren(int level, FractalPlantComponent selfPrefab, FractalPlantComponent termPrefab, ref List<Vector3> termPositions) {
+    private void InstantiateChildren(int level, int maxRendererLevel, FractalPlantComponent selfPrefab, FractalPlantComponent termPrefab, ref List<Vector3> termPositions) {
         // pick children count
         float sum = 0f;
         System.Array.ForEach(childCountProbablities, e => sum += e);
@@ -93,7 +110,7 @@ public class FractalPlantComponent : MonoBehaviour {
                 curAngle += 360f / childCount;
             }
 
-            child.GenerateRecursive(level - 1, selfPrefab, termPrefab, ref termPositions);
+            child.GenerateRecursive(level - 1, maxRendererLevel, selfPrefab, termPrefab, ref termPositions);
 
             children[i] = child;
         }
@@ -108,16 +125,6 @@ public class FractalPlantComponent : MonoBehaviour {
         }
 
         return sum;
-    }
-
-    public void PopulateRenderers(ref List<Renderer> list) {
-        list.Add(renderer);
-
-        if (children != null) {
-            for (int i = 0; i < children.Length; i++) {
-                children[i].PopulateRenderers(ref list);
-            }
-        }
     }
 
     public void LerpScaleRecursive(float t) {
@@ -151,7 +158,7 @@ public class FractalPlantComponent : MonoBehaviour {
             float scaleMult = 1f / estimateScale();
             child.transform.localScale = termPrefab.transform.localScale * scaleMult;
 
-            child.GenerateRecursive(0, termPrefab, null, ref termPositions);
+            child.GenerateRecursive(0, 0, termPrefab, null, ref termPositions);
 
             children = new FractalPlantComponent[1];
             children[0] = child;

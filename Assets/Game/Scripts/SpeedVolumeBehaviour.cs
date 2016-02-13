@@ -23,7 +23,7 @@ public class SpeedVolumeBehaviour : MonoBehaviour {
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void FixedUpdate () {
         float instVelocity = (transform.position - prevPosition).magnitude / Time.deltaTime;
         prevPosition = transform.position;
 

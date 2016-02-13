@@ -180,14 +180,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sensorRadius: 15
-  avoidanceDist: 8
+  avoidanceDist: 5
   centeringWeight: 0.01
   steeringWeight: 0.05
   avoidanceWeight: 0.5
   targettingWeight: 0.005
-  launchTime: 4
+  launchTime: 1
   maxSpeed: 20
   maxDist: 300
+  playerSensorRadius: 30
+  playerSpeedMult: 1.5
   target: {fileID: 0}
 --- !u!135 &13596514
 SphereCollider:
@@ -218,7 +220,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: launchTime
-      value: 4
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxDist
@@ -228,6 +230,18 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: b5c1b5a56e1514a43982118ca560e788, type: 2}
+    - target: {fileID: 0}
+      propertyPath: maxSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: playerSensorRadius
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avoidanceDist
+      value: 5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 160624}

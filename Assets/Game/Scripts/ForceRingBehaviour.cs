@@ -8,10 +8,10 @@ public class ForceRingBehaviour : MonoBehaviour {
     void OnTriggerEnter(Collider other) {
         Debug.Log("Triggered");
 
-        PlayerModeManager player = other.GetComponentInParent<PlayerModeManager>();
-        if (player != null && player.Mode == PlayerModeManager.PlayerMode.Flight) {
+        PlayerPhysicsBehaviour player = other.GetComponentInParent<PlayerPhysicsBehaviour>();
+        if (player != null && player.Owner.Mode == PlayerModeManager.PlayerMode.Flight) {
             Debug.Log("Moving Player!");
-            player.GetComponent<Rigidbody>().velocity = transform.forward * speed;
+            player.velocity = transform.forward * speed;
         }
     }
 }

@@ -1,4 +1,4 @@
-Shader "Toon/LitCutout" {
+Shader "Toon/Lit Cutout" {
 	Properties {
 		_Color ("Main Color", Color) = (0.5,0.5,0.5,1)
         _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5

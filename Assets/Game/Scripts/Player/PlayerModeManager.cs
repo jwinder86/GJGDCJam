@@ -1,7 +1,7 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
-[RequireComponent (typeof(Rigidbody))]
 public class PlayerModeManager : MonoBehaviour {
 
     public enum PlayerMode {
@@ -27,11 +27,10 @@ public class PlayerModeManager : MonoBehaviour {
     private Vector3 spawnPos;
     private Quaternion spawnAngle;
 
-    //private PlayerHoverBehaviour hover;
     private PlayerMovementBehaviour hoverMove;
     private PlayerFlightBehaviour flight;
-    new private Rigidbody rigidbody;
     private float defaultDrag;
+    private PlayerPhysicsBehaviour phys;
 
     private Animator animator;
     new private AudioSource audio;
@@ -42,7 +41,7 @@ public class PlayerModeManager : MonoBehaviour {
         //hover = GetComponent<PlayerHoverBehaviour>();
         hoverMove = GetComponent<PlayerMovementBehaviour>();
         flight = GetComponent<PlayerFlightBehaviour>();
-        rigidbody = GetComponent<Rigidbody>();
+        phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
 
         animator = GetComponentInChildren<Animator>();
         audio = GetComponent<AudioSource>();
@@ -54,16 +53,18 @@ public class PlayerModeManager : MonoBehaviour {
         hoverMove.enabled = true;
         flight.enabled = false;
         animator.SetBool("Flying", false);
+        phys.WingColliderEnabled = false;
 
-        defaultDrag = rigidbody.drag;
+        defaultDrag = phys.drag;
+
+        paused = false;
 
         spawnPos = transform.position;
         spawnAngle = transform.rotation;
-
-        paused = false;
-	}
+        hoverMove.InitializeAngles(spawnAngle.eulerAngles.y);
+    }
 	
-	// Update is called once per frame
+   // Update is called once per frame
 	void Update () {
         if (paused) {
             return;
@@ -78,9 +79,13 @@ public class PlayerModeManager : MonoBehaviour {
             StartCoroutine(ExitRoutine());
         }
 
-        if (transform.position.y < minHeight || transform.position.y > maxHeight) {
+        if (phys.position.y < minHeight || phys.position.y > maxHeight) {
             StartCoroutine(ResetRoutine());
         }
+
+        // sync position and rotation with phys
+        transform.position = phys.position;
+        phys.rotation = transform.rotation;
 	}
 
     private IEnumerator ResetRoutine() {
@@ -93,9 +98,9 @@ public class PlayerModeManager : MonoBehaviour {
 
         yield return new WaitForSeconds(fade.fadeTime);
 
-        transform.position = spawnPos;
-        transform.rotation = spawnAngle;
-        rigidbody.velocity = Vector3.zero;
+        phys.position = spawnPos;
+        phys.rotation = spawnAngle;
+        phys.velocity = Vector3.zero;
 
         fade.FadeIn();
 
@@ -112,13 +117,13 @@ public class PlayerModeManager : MonoBehaviour {
 
         yield return new WaitForSeconds(fade.fadeTime * 1.1f);
 
-        Application.LoadLevel("TitleScene");
+        SceneManager.LoadScene("TitleScene", LoadSceneMode.Single);
     }
 
-    void OnCollisionEnter(Collision collision) {
+    public void HandleCollision(Collision collision) {
         if (mode == PlayerMode.Flight && collision.relativeVelocity.magnitude >= hardHitSpeed) {
             audio.PlayOneShot(hitHard);
-            rigidbody.velocity = -collision.relativeVelocity;
+            phys.velocity = -collision.relativeVelocity;
 
             if (collision.contacts.Length > 0) {
                 ContactPoint p = collision.contacts[0];
@@ -145,6 +150,7 @@ public class PlayerModeManager : MonoBehaviour {
         hoverMove.enabled = false;
         flight.enabled = false;
         animator.SetBool("Flying", newMode == PlayerMode.Flight);
+        phys.WingColliderEnabled = (newMode == PlayerMode.Flight);
 
         float heading = (oldMode == PlayerMode.Flight ? flight.Heading : hoverMove.Heading);
         yield return StartCoroutine(AlignRotation(heading));
@@ -165,13 +171,13 @@ public class PlayerModeManager : MonoBehaviour {
         Quaternion goal = Quaternion.AngleAxis(heading, Vector3.up);
 
         for (float timer = 0f; timer < transitionTime; timer += Time.deltaTime) {
-            rigidbody.drag = Mathf.Lerp(defaultDrag, transitionDrag, timer / transitionTime);
+            phys.drag = Mathf.Lerp(defaultDrag, transitionDrag, timer / transitionTime);
             transform.rotation = Quaternion.Slerp(start, goal, timer / transitionTime);
             yield return null;
         }
 
         transform.rotation = goal;
 
-        rigidbody.drag = defaultDrag;
+        phys.drag = defaultDrag;
     }
 }

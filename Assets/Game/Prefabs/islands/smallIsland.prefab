@@ -278,8 +278,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 139702}
-  m_LocalRotation: {x: 0, y: 0.9473268, z: 0, w: 0.32026872}
-  m_LocalPosition: {x: 116.3, y: 0, z: 88.8}
+  m_LocalRotation: {x: 0, y: -0.04104747, z: 0, w: -0.99915725}
+  m_LocalPosition: {x: 151, y: 94, z: 416}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 414568}
@@ -363,7 +363,7 @@ MeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 80926d0fee9e57b4fb22191eeca58825, type: 2}
+  - {fileID: 2100000, guid: 1daa4279d0629c447808fddc836acd16, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
   m_UseLightProbes: 1
@@ -463,7 +463,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 134786}
-  m_Mesh: {fileID: 4300000, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
+  m_Mesh: {fileID: 4300002, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
 --- !u!33 &3337726
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -503,7 +503,7 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Convex: 0
-  m_Mesh: {fileID: 4300000, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
+  m_Mesh: {fileID: 4300002, guid: a77e4cb9a550ef248b55716aa35fdb9b, type: 3}
 --- !u!114 &11410772
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -533,6 +533,7 @@ MonoBehaviour:
   radius: 12
   minDist: 15
   maxAngle: 15
+  minOnePlant: 1
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11448406
@@ -566,6 +567,7 @@ MonoBehaviour:
   radius: 13
   minDist: 4
   maxAngle: 15
+  minOnePlant: 0
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11468300
@@ -597,6 +599,7 @@ MonoBehaviour:
   radius: 12
   minDist: 15
   maxAngle: 15
+  minOnePlant: 0
   visInEditor: 0
   updateFrames: 20
 --- !u!114 &11483676
@@ -641,7 +644,11 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: minOnePlant
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 139702}

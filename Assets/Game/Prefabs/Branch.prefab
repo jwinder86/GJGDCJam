@@ -11,7 +11,7 @@ GameObject:
   - 33: {fileID: 3322708}
   - 23: {fileID: 2370166}
   m_Layer: 0
-  m_Name: Cylinder1_default
+  m_Name: model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -104,11 +104,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   renderer: {fileID: 2370166}
-  minLevels: 5
-  maxLevels: 6
   maxAngle: 10
   randomizeYRotation: 0
   relativeScale: 0.6
+  minColliderScale: 0.2
   mountPoint: {x: 0, y: 2, z: 0}
   minTerminalDistance: 0
   splitAngle: 30
@@ -216,6 +215,10 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: minTerminalDistance
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Name
+      value: model
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

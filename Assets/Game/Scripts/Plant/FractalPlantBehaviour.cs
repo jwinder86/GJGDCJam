@@ -11,9 +11,10 @@ public class FractalPlantBehaviour : PlantBehaviour {
     public AnimationCurve curve;
 
     public int height = 6;
+    public int maxRendererHeight = 4;
 
     private FractalPlantComponent root;
-    private List<Renderer> renderers;
+    private Renderer[] renderers;
 
     new private AudioSource audio;
 
@@ -22,8 +23,7 @@ public class FractalPlantBehaviour : PlantBehaviour {
         audio = GetComponent<AudioSource>();
 
         GeneratePlant();
-        renderers = new List<Renderer>(root.Count());
-        root.PopulateRenderers(ref renderers);
+        renderers = GetComponentsInChildren<Renderer>();
     }
 
     new void Start() {
@@ -38,7 +38,11 @@ public class FractalPlantBehaviour : PlantBehaviour {
 
     protected override void EnableRender(bool render) {
         foreach (Renderer r in renderers) {
-            r.enabled = render;
+            if (r != null) {
+                r.enabled = render;
+            } else {
+                Debug.LogError("Got missing renderer!", this);
+            }
         }
     }
 
@@ -71,6 +75,6 @@ public class FractalPlantBehaviour : PlantBehaviour {
 
         List<Vector3> termPositions = new List<Vector3>();
 
-        root.GenerateRecursive(height, middlePrefab, topPrefab, ref termPositions);
+        root.GenerateRecursive(height, maxRendererHeight, middlePrefab, topPrefab, ref termPositions);
     }
 }

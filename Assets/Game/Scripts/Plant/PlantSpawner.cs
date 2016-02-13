@@ -13,6 +13,8 @@ public class PlantSpawner : MonoBehaviour {
 
     public float maxAngle = 15f;
 
+    public bool minOnePlant = false;
+
     public bool visInEditor;
 
     public int updateFrames = 10;
@@ -72,6 +74,11 @@ public class PlantSpawner : MonoBehaviour {
 
 	void GeneratePlants(PlantBehaviour[] selectedPrefabs, List<Vector2> samples, Quaternion rotAdjust) {
         Debug.Log("Sample count: " + samples.Count);
+
+        // force a single plant
+        if (samples.Count == 0 && minOnePlant) {
+            samples.Add(Vector2.zero);
+        }
 
         for (int i = 0; i < samples.Count; i++) {
             Vector2 s = samples[i];

@@ -1,12 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerMovementBehaviour : MonoBehaviour {
 
     // components
-    new private Rigidbody rigidbody;
     new private Transform camera;
+    private PlayerPhysicsBehaviour phys;
 
     // settings
     public float moveForce = 3f;
@@ -31,7 +30,7 @@ public class PlayerMovementBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Awake() {
-        rigidbody = GetComponent<Rigidbody>();
+        phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
         camera = Camera.main.transform;
     }
 
@@ -90,17 +89,18 @@ public class PlayerMovementBehaviour : MonoBehaviour {
 
     // handle actually moving player
     private void Move(Vector3 moveDirection) {
-        Vector2 velocity = new Vector2(rigidbody.velocity.x, rigidbody.velocity.z);
+        Vector3 velocity = phys.absoluteVelocity;
+        Vector2 velocity2d = new Vector2(velocity.x, velocity.z);
         if (moveDirection.sqrMagnitude > 0f) {
             Vector2 moveDirectionNormalized = moveDirection.normalized;
             Vector2 left = new Vector2(-moveDirectionNormalized.y, moveDirectionNormalized.x);
 
             // dampen non-directional speed
-            float leftSpeed = Vector2.Dot(velocity, left);
+            float leftSpeed = Vector2.Dot(velocity2d, left);
             Vector2 dampenForce = leftSpeed * leftSpeed * Mathf.Sign(leftSpeed) * directionalDamping * left;
 
             // find goal speed
-            float curDirectionSpeed = Vector2.Dot(velocity, moveDirectionNormalized);
+            float curDirectionSpeed = Vector2.Dot(velocity2d, moveDirectionNormalized);
             float goalMaxSpeed = moveDirection.magnitude * maxSpeed;
 
             float mult;
@@ -115,14 +115,14 @@ public class PlayerMovementBehaviour : MonoBehaviour {
             Vector2 force = moveForce * mult * moveDirectionNormalized;
             Vector2 total = force - dampenForce;
 
-            rigidbody.AddForce(new Vector3(total.x, 0f, total.y), ForceMode.Acceleration);
+            phys.AddForce(new Vector3(total.x, 0f, total.y), ForceMode.Acceleration);
 
             // Debug.Log("Speed: " + rigidbody.velocity + " (" + curDirectionSpeed + " / " + goalMaxSpeed + ") force added: " + force + " dampening: " + dampenForce);
 
         } else {
-            Vector2 dampenForce = -velocity.sqrMagnitude * velocity.normalized * directionalDamping;
+            Vector2 dampenForce = -velocity2d.sqrMagnitude * velocity2d.normalized * directionalDamping;
 
-            rigidbody.AddForce(new Vector3(dampenForce.x, 0f, dampenForce.y), ForceMode.Acceleration);
+            phys.AddForce(new Vector3(dampenForce.x, 0f, dampenForce.y), ForceMode.Acceleration);
 
             // Debug.Log("Speed: " + rigidbody.velocity + " dampening: " + dampenForce);
         }

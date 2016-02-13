@@ -18,17 +18,20 @@ public class BoidBehaviour : MonoBehaviour {
 
     public float maxDist = 200f;
 
+    public float playerSensorRadius = 40f;
+    public float playerSpeedMult = 1.5f;
+
     public Transform target;
 
     private Vector3 velocity;
     private bool launching;
 
-    private PlayerMovementBehaviour player;
+    private PlayerPhysicsBehaviour player;
     private Renderer[] renderers;
     private bool renEnabled;
 
     void Awake() {
-        player = FindObjectOfType<PlayerMovementBehaviour>();
+        player = FindObjectOfType<PlayerPhysicsBehaviour>();
         renderers = GetComponentsInChildren<Renderer>();
     }
 
@@ -40,9 +43,14 @@ public class BoidBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        float distToPlayer = (player.transform.position - transform.position).magnitude;
+        Vector3 toPlayer = player.transform.position - transform.position;
+        float toPlayerDist = toPlayer.magnitude;
+        
+        // modifications based on proximity to player
+        float frameMaxSpeed = maxSpeed;
+        Transform frameTarget = target;
 
-        if (!launching && !(distToPlayer > maxDist)) {
+        if (!launching && !(toPlayerDist > maxDist)) {
             // find flock
             Collider[] colliders = Physics.OverlapSphere(transform.position, sensorRadius, layerMask, QueryTriggerInteraction.Ignore);
 
@@ -64,17 +72,44 @@ public class BoidBehaviour : MonoBehaviour {
                         //avoidance -= toBoid.normalized * (avoidanceDist - toBoidDist);
                         avoidance -= toBoid;
                     }
-                } else {
-                    BoidObstacle obstacle = colliders[i].GetComponent<BoidObstacle>();
-                    if (obstacle != null) {
-                        Vector3 toObstacle = obstacle.transform.position - transform.position;
-                        float toObstacleDist = toObstacle.magnitude;
-                        if (toObstacleDist < (avoidanceDist + obstacle.radius)) {
-                            avoidance -= toObstacle.normalized * (avoidanceDist + obstacle.radius - toObstacleDist);
-                        }
+
+                    continue;
+                }
+
+                BoidObstacle obstacle = colliders[i].GetComponent<BoidObstacle>();
+                if (obstacle != null) {
+                    Vector3 toObstacle = obstacle.transform.position - transform.position;
+                    float toObstacleDist = toObstacle.magnitude;
+                    if (toObstacleDist < (avoidanceDist + obstacle.radius)) {
+                        float avoidForce = (avoidanceDist + obstacle.radius - toObstacleDist);
+                        avoidance -= toObstacle.normalized * avoidForce;
                     }
+
+                    continue;
                 }
             }
+
+            // special case: consider player a boid
+            if (toPlayerDist < playerSensorRadius) {
+                Vector3 playerVelocity = player.velocity;
+                flockCenter += player.transform.position;
+                flockVelocity += playerVelocity;
+                count++;
+
+                if (toPlayerDist < avoidanceDist) {
+                    //avoidance -= toBoid.normalized * (avoidanceDist - toBoidDist);
+                    avoidance -= toPlayer;
+                }
+
+                // new max speed
+                float playerSpeed = playerVelocity.magnitude;
+                frameMaxSpeed = Mathf.Max(frameMaxSpeed, Mathf.Lerp(playerSpeed, playerSpeed * playerSpeedMult, 
+                    Mathf.Clamp01(Mathf.InverseLerp(playerSensorRadius, avoidanceDist, toPlayerDist))));
+
+                // target player
+                frameTarget = player.transform;
+            }
+
             flockCenter /= count;
             flockVelocity /= count;
 
@@ -92,20 +127,20 @@ public class BoidBehaviour : MonoBehaviour {
                 newVelocity += flockVelocity * steeringWeight;
             }
 
-            if (target != null) {
+            if (frameTarget != null) {
                 newVelocity += (target.position - transform.position) * targettingWeight;
             }
 
             velocity += newVelocity;
 
-            velocity = Vector3.ClampMagnitude(velocity, maxSpeed);
+            velocity = Vector3.ClampMagnitude(velocity, frameMaxSpeed);
 
             // update position
             transform.position = transform.position + velocity * Time.deltaTime;
             transform.LookAt(transform.position + velocity, Vector3.up);
         }
 
-        bool newRenEnabled = (distToPlayer <= maxDist);
+        bool newRenEnabled = (toPlayerDist <= maxDist);
         if (newRenEnabled != renEnabled) {
             for (int i = 0; i < renderers.Length; i++) {
                 renderers[i].enabled = newRenEnabled;

@@ -6,8 +6,8 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: TestMaterial
-  m_Shader: {fileID: 4800000, guid: 48dca5b99d113b8d11006bab44295342, type: 3}
+  m_Name: CreteMaterial
+  m_Shader: {fileID: 4800000, guid: 778d1e83a601bdf4a9c476da75a343a1, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
   m_CustomRenderQueue: 2000
@@ -142,4 +142,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.25735295, g: 0.56977683, b: 1, a: 1}
+        second: {r: 0.38884082, g: 0.4186851, b: 0.42647058, a: 1}

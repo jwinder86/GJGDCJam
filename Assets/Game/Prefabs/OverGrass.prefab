@@ -102,7 +102,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b6971ecb769fc84288f54d71a27ddb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnDist: 12
+  spawnDist: 18
   spawnDistRand: 0.5
   spawnTime: 0.5
   maxRenderDist: 150
@@ -182,7 +182,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnDist
-      value: 12
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnDistRand

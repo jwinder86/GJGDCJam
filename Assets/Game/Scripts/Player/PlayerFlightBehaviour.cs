@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent(typeof(Rigidbody))]
 public class PlayerFlightBehaviour : MonoBehaviour {
 
     // minimum degrees velocity
@@ -37,7 +36,7 @@ public class PlayerFlightBehaviour : MonoBehaviour {
     private float roll, rollVelocity;
     private float heading;
 
-    new private Rigidbody rigidbody;
+    private PlayerPhysicsBehaviour phys;
 
     public float Heading {
         get { return heading; }
@@ -56,7 +55,7 @@ public class PlayerFlightBehaviour : MonoBehaviour {
     }
 
     void Awake() {
-        rigidbody = GetComponent<Rigidbody>();
+        phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
     }
 
     // Use this for initialization
@@ -105,13 +104,17 @@ public class PlayerFlightBehaviour : MonoBehaviour {
         transform.Rotate(0f, heading, 0f);
         transform.Rotate(transform.right, pitch, Space.World);
         transform.Rotate(-transform.forward, roll, Space.World);
+
+        //transform.rotation = Quaternion.AngleAxis(roll, -transform.forward) * Quaternion.AngleAxis(pitch, transform.right) * Quaternion.Euler(0f, heading, 0f);
+
+        //rigidbody.MoveRotation(Quaternion.AngleAxis(roll, -transform.forward) * Quaternion.AngleAxis(pitch, transform.right) * Quaternion.Euler(0f, heading, 0f));
     }
 
     void FixedUpdate() {
         // calc wing forces
-        Vector3 verForce = CalculateNormalDrag(-rigidbody.velocity, transform.up) * verticalCoef;
-        Vector3 horForce = CalculateNormalDrag(-rigidbody.velocity, transform.right) * horizontalCoef;
-        Vector3 dragForce = CalculateDragForce(rigidbody.velocity) * dragCoef;
+        Vector3 verForce = CalculateNormalDrag(-phys.absoluteVelocity, transform.up) * verticalCoef;
+        Vector3 horForce = CalculateNormalDrag(-phys.absoluteVelocity, transform.right) * horizontalCoef;
+        Vector3 dragForce = CalculateDragForce(phys.absoluteVelocity) * dragCoef;
         Vector3 thrustForce = thrust * transform.forward;// * (!Input.GetButton("Jump") ? 1f : 0f);
 
         // draw gizmos
@@ -121,7 +124,7 @@ public class PlayerFlightBehaviour : MonoBehaviour {
         DrawGizmo(thrustForce, Color.cyan);
 
         // apply force to body
-        rigidbody.AddForce(verForce + horForce + dragForce + thrustForce, ForceMode.Force);
+        phys.AddForce(verForce + horForce + dragForce + thrustForce, ForceMode.Force);
     }
 
     private float AngleSpeed(float max, float dead, float input) {
@@ -139,7 +142,7 @@ public class PlayerFlightBehaviour : MonoBehaviour {
 
     private void DrawGizmo(Vector3 direction, Color color) {
         for (int i = 0; i < gizmoPositions.Length; i++) {
-            Vector3 worldPos = transform.position + transform.TransformDirection(gizmoPositions[i]);
+            Vector3 worldPos = phys.position + transform.TransformDirection(gizmoPositions[i]);
             Debug.DrawLine(worldPos, worldPos + direction, color);
         }
     }
