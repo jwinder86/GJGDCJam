@@ -32,10 +32,14 @@ public class PlayerPhysicsBehaviour : MonoBehaviour {
         set { rigidbody.MoveRotation(value); }
     }
 
-    public Collider wingCollider;
+    public BoxCollider wingCollider;
     public bool WingColliderEnabled {
         get { return wingCollider.enabled; }
-        set { wingCollider.enabled  = value; }
+        set {
+            wingCollider.enabled  = value;
+            float angle = value ? 90f : 0f;
+            wingCollider.transform.localRotation = Quaternion.Euler(angle, 0f, 0f);
+        }
     }
 
     new private Rigidbody rigidbody;
@@ -92,7 +96,7 @@ public class PlayerPhysicsBehaviour : MonoBehaviour {
             Debug.LogWarning("Current time " + Time.time + " is before previous update " + lastUpdateTime);
             return a;
         } else  if (Time.time > nextUpdate) {
-            Debug.LogWarning("Current time " + Time.time + " is past expected next update " + nextUpdate);
+            //Debug.LogWarning("Current time " + Time.time + " is past expected next update " + nextUpdate);
             return b;
         } else {
             return Vector3.Lerp(a, b,

@@ -16,6 +16,8 @@ public class PlayerModeManager : MonoBehaviour {
     public AudioClip hitHard;
     public ParticleBehaviour hitParticlePrefab;
 
+    public float flightBurstSpeed = 20f;
+
     public float minHeight = -150f;
     public float maxHeight = 500f;
 
@@ -29,6 +31,7 @@ public class PlayerModeManager : MonoBehaviour {
 
     private PlayerMovementBehaviour hoverMove;
     private PlayerFlightBehaviour flight;
+    private PlayerCameraBehaviour cam;
     private float defaultDrag;
     private PlayerPhysicsBehaviour phys;
 
@@ -38,9 +41,9 @@ public class PlayerModeManager : MonoBehaviour {
     private bool paused;
 
     void Awake() {
-        //hover = GetComponent<PlayerHoverBehaviour>();
         hoverMove = GetComponent<PlayerMovementBehaviour>();
         flight = GetComponent<PlayerFlightBehaviour>();
+        cam = GetComponent<PlayerCameraBehaviour>();
         phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
 
         animator = GetComponentInChildren<Animator>();
@@ -151,6 +154,7 @@ public class PlayerModeManager : MonoBehaviour {
         flight.enabled = false;
         animator.SetBool("Flying", newMode == PlayerMode.Flight);
         phys.WingColliderEnabled = (newMode == PlayerMode.Flight);
+        cam.Transition(transitionTime, newMode == PlayerMode.Flight);
 
         float heading = (oldMode == PlayerMode.Flight ? flight.Heading : hoverMove.Heading);
         yield return StartCoroutine(AlignRotation(heading));
@@ -158,6 +162,7 @@ public class PlayerModeManager : MonoBehaviour {
         if (newMode == PlayerMode.Flight) {
             flight.InitializeHeading(heading);
             flight.enabled = true;
+            phys.velocity = transform.forward * flightBurstSpeed;
         } else {
             hoverMove.InitializeAngles(heading);
             hoverMove.enabled = true;
