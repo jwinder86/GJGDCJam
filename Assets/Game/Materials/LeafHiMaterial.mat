@@ -6,7 +6,7 @@ Material:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: GroundMaterial
+  m_Name: LeafHiMaterial
   m_Shader: {fileID: 4800000, guid: 3e15b0ca1b9e5a64f98f2a930f46c0b5, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 5
@@ -82,7 +82,7 @@ Material:
         first:
           name: _Ramp
         second:
-          m_Texture: {fileID: 2800000, guid: 946c0e6cd8645c44cb857d15c670dece, type: 3}
+          m_Texture: {fileID: 2800000, guid: 5095a4532be5c1843aa4bd7608598289, type: 3}
           m_Scale: {x: 1, y: 1}
           m_Offset: {x: 0, y: 0}
     m_Floats:
@@ -97,7 +97,7 @@ Material:
       data:
         first:
           name: _Cutoff
-        second: 0.5
+        second: 0.161
       data:
         first:
           name: _Parallax
@@ -142,4 +142,4 @@ Material:
       data:
         first:
           name: _Color
-        second: {r: 0.24264705, g: 0.21766862, b: 0.18020111, a: 1}
+        second: {r: 0.13990441, g: 0.359, b: 0.17767952, a: 1}

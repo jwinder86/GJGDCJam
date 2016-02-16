@@ -125,7 +125,7 @@ MonoBehaviour:
     m_RotationOrder: 0
   yScaleRandomization: 0
   renderer: {fileID: 2340874}
-  lodDist: 150
+  lodDist: 200
   farDistMaterial: {fileID: 2100000, guid: 864c55f65a6f2df4db6e2cc7472b74f2, type: 2}
 --- !u!1001 &100100000
 Prefab:
@@ -216,7 +216,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 864c55f65a6f2df4db6e2cc7472b74f2, type: 2}
     - target: {fileID: 0}
       propertyPath: lodDist
-      value: 150
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

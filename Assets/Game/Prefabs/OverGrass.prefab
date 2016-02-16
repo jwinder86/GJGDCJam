@@ -105,7 +105,7 @@ MonoBehaviour:
   spawnDist: 18
   spawnDistRand: 0.5
   spawnTime: 0.5
-  maxRenderDist: 150
+  maxRenderDist: 200
   randomizeYRotation: 1
   curve:
     serializedVersion: 2
@@ -206,7 +206,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: maxRenderDist
-      value: 150
+      value: 200
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

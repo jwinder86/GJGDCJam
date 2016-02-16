@@ -80,11 +80,11 @@ Material:
       data:
         first:
           name: _SkyColor2
-        second: {r: 0.89, g: 0.96, b: 1, a: 0}
+        second: {r: 0.725673, g: 0.81956893, b: 0.897, a: 0}
       data:
         first:
           name: _SkyColor3
-        second: {r: 0.89, g: 0.89, b: 0.89, a: 0}
+        second: {r: 0.382302, g: 0.47585875, b: 0.603, a: 0}
       data:
         first:
           name: _SunColor
