@@ -6,7 +6,8 @@ public class PlayerModeManager : MonoBehaviour {
 
     public enum PlayerMode {
         Hover,
-        Flight
+        Flight,
+        Stun
     }
 
     public float transitionTime;
@@ -17,6 +18,8 @@ public class PlayerModeManager : MonoBehaviour {
     public ParticleBehaviour hitParticlePrefab;
 
     public float flightBurstSpeed = 20f;
+    public float stunTime = 2f;
+    public float maxReboundSpeed = 10f;
 
     public float minHeight = -150f;
     public float maxHeight = 500f;
@@ -32,18 +35,23 @@ public class PlayerModeManager : MonoBehaviour {
     private PlayerMovementBehaviour hoverMove;
     private PlayerFlightBehaviour flight;
     private PlayerCameraBehaviour cam;
-    private float defaultDrag;
+    private PlayerLeavesBehaviour leavesEffect;
+    private RustleSoundManager rustle;
     private PlayerPhysicsBehaviour phys;
+    private float defaultDrag;
 
     private Animator animator;
     new private AudioSource audio;
 
     private bool paused;
+    private bool rotFromPhys;
 
     void Awake() {
         hoverMove = GetComponent<PlayerMovementBehaviour>();
         flight = GetComponent<PlayerFlightBehaviour>();
         cam = GetComponent<PlayerCameraBehaviour>();
+        leavesEffect = GetComponentInChildren<PlayerLeavesBehaviour>();
+        rustle = GetComponent<RustleSoundManager>();
         phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
 
         animator = GetComponentInChildren<Animator>();
@@ -61,6 +69,7 @@ public class PlayerModeManager : MonoBehaviour {
         defaultDrag = phys.drag;
 
         paused = false;
+        rotFromPhys = false;
 
         spawnPos = transform.position;
         spawnAngle = transform.rotation;
@@ -69,26 +78,23 @@ public class PlayerModeManager : MonoBehaviour {
 	
    // Update is called once per frame
 	void Update () {
-        if (paused) {
-            return;
-        }
+        if (!paused) {
+            // manual toggle
+            if (Input.GetButtonDown("ToggleFly")) {
+                setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
+            }
 
-        // manual toggle
-	    if (Input.GetButtonDown("ToggleFly")) {
-            setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
-        }
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                StartCoroutine(ExitRoutine());
+            }
 
-        if (Input.GetKeyDown(KeyCode.Escape)) {
-            StartCoroutine(ExitRoutine());
-        }
-
-        if (phys.position.y < minHeight || phys.position.y > maxHeight) {
-            StartCoroutine(ResetRoutine());
+            if (phys.position.y < minHeight || phys.position.y > maxHeight) {
+                StartCoroutine(ResetRoutine());
+            }
         }
 
         // sync position and rotation with phys
-        transform.position = phys.position;
-        phys.rotation = transform.rotation;
+        SyncPhys();
 	}
 
     private IEnumerator ResetRoutine() {
@@ -101,9 +107,9 @@ public class PlayerModeManager : MonoBehaviour {
 
         yield return new WaitForSeconds(fade.fadeTime);
 
-        phys.position = spawnPos;
-        phys.rotation = spawnAngle;
-        phys.velocity = Vector3.zero;
+        phys.Teleport(spawnPos, spawnAngle);
+        transform.position = phys.position;
+        cam.Teleport();
 
         fade.FadeIn();
 
@@ -123,18 +129,59 @@ public class PlayerModeManager : MonoBehaviour {
         SceneManager.LoadScene("TitleScene", LoadSceneMode.Single);
     }
 
+    public void HandleLeavesTrigger() {
+        leavesEffect.EmitLeaves();
+        rustle.PlaySound(transform.position);
+    }
+
     public void HandleCollision(Collision collision) {
         if (mode == PlayerMode.Flight && collision.relativeVelocity.magnitude >= hardHitSpeed) {
             audio.PlayOneShot(hitHard);
-            phys.velocity = -collision.relativeVelocity;
+            cam.HeavyShake(0.5f);
+
+            // remove constrainst
+            rotFromPhys = true;
+            phys.ConstrainRotation(false);
+            phys.velocity = Vector3.ClampMagnitude(collision.relativeVelocity, maxReboundSpeed);
 
             if (collision.contacts.Length > 0) {
                 ContactPoint p = collision.contacts[0];
                 Instantiate(hitParticlePrefab, p.point, Quaternion.LookRotation(p.normal));
+
+                phys.AddForceAtPosition(p.normal * maxReboundSpeed, p.point, ForceMode.VelocityChange);
             }
 
-            setMode(PlayerMode.Hover);
+            StopAllCoroutines();
+            StartCoroutine(StunRoutine());
         }
+    }
+
+    private IEnumerator StunRoutine() {
+        paused = true;
+
+        PlayerMode oldMode = mode;
+        mode = PlayerMode.Stun;
+
+        hoverMove.enabled = false;
+        flight.enabled = false;
+        animator.SetBool("Stun", true);
+        animator.SetBool("Flying", false);
+        phys.WingColliderEnabled = (false);
+        cam.Transition(transitionTime, false);
+
+        yield return new WaitForSeconds(stunTime);
+
+        phys.ConstrainRotation(true);
+        rotFromPhys = false;
+        animator.SetBool("Stun", false);
+
+        float heading = (oldMode == PlayerMode.Flight ? flight.Heading : hoverMove.Heading);
+        yield return StartCoroutine(AlignRotation(heading));
+
+        hoverMove.InitializeAngles(heading);
+        hoverMove.enabled = true;
+
+        paused = false;
     }
 
     private void setMode(PlayerMode newMode) {
@@ -152,6 +199,7 @@ public class PlayerModeManager : MonoBehaviour {
 
         hoverMove.enabled = false;
         flight.enabled = false;
+        animator.SetBool("Stun", false);
         animator.SetBool("Flying", newMode == PlayerMode.Flight);
         phys.WingColliderEnabled = (newMode == PlayerMode.Flight);
         cam.Transition(transitionTime, newMode == PlayerMode.Flight);
@@ -167,8 +215,6 @@ public class PlayerModeManager : MonoBehaviour {
             hoverMove.InitializeAngles(heading);
             hoverMove.enabled = true;
         }
-
-        mode = newMode;
     }
 
     private IEnumerator AlignRotation(float heading) {
@@ -184,5 +230,15 @@ public class PlayerModeManager : MonoBehaviour {
         transform.rotation = goal;
 
         phys.drag = defaultDrag;
+    }
+
+    private void SyncPhys() {
+        transform.position = phys.position;
+
+        if (rotFromPhys) {
+            transform.rotation = phys.rotation;
+        } else {
+            phys.rotation = transform.rotation;
+        }
     }
 }

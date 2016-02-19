@@ -73,7 +73,7 @@ public class PlantSpawner : MonoBehaviour {
     }
 
 	void GeneratePlants(PlantBehaviour[] selectedPrefabs, List<Vector2> samples, Quaternion rotAdjust) {
-        Debug.Log("Sample count: " + samples.Count);
+        //Debug.Log("Sample count: " + samples.Count);
 
         // force a single plant
         if (samples.Count == 0 && minOnePlant) {

@@ -3,6 +3,9 @@ using System.Collections;
 
 public class PlayerCameraBehaviour : MonoBehaviour {
 
+    private const float X_COEF = 5f;
+    private const float Y_COEF = 7f;
+
     public float cameraDistance = 10f;
     public float cameraMoveTime = 0.3f;
 
@@ -16,15 +19,23 @@ public class PlayerCameraBehaviour : MonoBehaviour {
 
     [Header ("Flight Settings")]
     public Vector3 flightCameraOffset = new Vector3(0f, 3f, -10f);
-    public float rollPercentage = 0.3f;
     public float flightLookAhead = 3f;
 
+    [Header ("Shake Settings")]
+    public float shakeMagnitude = 10f;
+    public float shakeSpeed = 5f;
+
+    public float heavyShakeMagnitude = 3f;
+    public float heavyShakeSpeed = 0.5f;
+
+    private float shakeTimer;
+    private float heavyShakeTimer;
+    private Vector3 shakeOffset;
+
     new private Transform camera;
-    private PlayerFlightBehaviour flight;
+    private PlayerModeManager mode;
 
     private Vector3 camVelocity;
-
-    private float rollAngle, rollAngleVelocity;
 
     private float curVertAngle;
 
@@ -33,44 +44,85 @@ public class PlayerCameraBehaviour : MonoBehaviour {
 
     void Awake () {
         camera = Camera.main.transform;
-        flight = GetComponent<PlayerFlightBehaviour>();
+        mode = GetComponent<PlayerModeManager>();
 	}
 
     void Start() {
         camVelocity = Vector3.zero;
 
-        rollAngle = 0f;
-        rollAngleVelocity = 0f;
-
         curVertAngle = vertAngle;
 
         transitioning = false;
         transitionFlightRatio = 0f;
+
+        shakeTimer = 0f;
+        heavyShakeTimer = 0f;
+        shakeOffset = Vector3.zero;
     }
 	
 	// Update is called once per frame
 	void LateUpdate () {
+        // handle shaking
+        if (Input.GetKey(KeyCode.Alpha1)) {
+            Shake(1f);
+        }
+
+        if (Input.GetKey(KeyCode.Alpha2)) {
+            HeavyShake(1f);
+        }
+
+        if (shakeTimer > 0f) {
+            shakeTimer -= Time.deltaTime;
+        }
+
+        if (heavyShakeTimer > 0f) {
+            heavyShakeTimer -= Time.deltaTime;
+        }
+
+
         Vector2 input = new Vector2(
             Input.GetAxis("LookHorizontal"),
             Input.GetAxis("LookVertical"));
 
-        camera.position = Vector3.SmoothDamp(camera.position, PositionGoal(input), ref camVelocity, cameraMoveTime);
+        // ignore shake offset when smoothing camera movement
+        camera.position = Vector3.SmoothDamp(camera.position - shakeOffset, PositionGoal(input), ref camVelocity, cameraMoveTime);
         camera.LookAt(TargetGoal());
 
-        float goalRollAngle;
-        if (flight.enabled) {
-            goalRollAngle = flight.Roll * -rollPercentage;
+        if (heavyShakeTimer > 0f) {
+            shakeOffset = heavyShakeMagnitude * heavyShakeTimer * (Mathf.Sin(Time.time * heavyShakeSpeed * Y_COEF) * camera.up + Mathf.Cos(Time.time * heavyShakeSpeed * X_COEF) * camera.right);
+        } else if (shakeTimer > 0f) {
+            shakeOffset = shakeMagnitude * shakeTimer * (Mathf.Sin(Time.time * shakeSpeed * Y_COEF) * camera.up + Mathf.Cos(Time.time * shakeSpeed * X_COEF) * camera.right) * Mathf.PerlinNoise(Time.time, 0f);
         } else {
-            goalRollAngle = 0f;
+            shakeOffset = Vector3.zero;
         }
 
-        rollAngle = Mathf.SmoothDampAngle(rollAngle, goalRollAngle, ref rollAngleVelocity, 1f);
+        camera.position += shakeOffset;
+    }
+
+    public void Shake(float time) {
+        shakeTimer = Mathf.Max(shakeTimer, time);
+    }
+
+    public void HeavyShake(float time) {
+        heavyShakeTimer = Mathf.Max(heavyShakeTimer, time);
+    }
+
+    public void Teleport() {
+        camera.position = PositionGoal(Vector2.zero);
+        camVelocity = Vector3.zero;
+        camera.LookAt(TargetGoal());
+        shakeTimer = 0f;
+        heavyShakeTimer = 0f;
     }
 
     private Vector3 PositionGoal(Vector2 input) {
         if (transitioning) {
-            return Vector3.Lerp(HoverModeGoal(input), FlightModeGoal(input), transitionFlightRatio);
-        } else if (flight.enabled) {
+            if (mode.Mode == PlayerModeManager.PlayerMode.Stun) {
+                return Vector3.Lerp(HoverModeGoal(input), camera.position, transitionFlightRatio);
+            } else {
+                return Vector3.Lerp(HoverModeGoal(input), FlightModeGoal(input), transitionFlightRatio);
+            }
+        } else if (mode.Mode == PlayerModeManager.PlayerMode.Flight) {
             return FlightModeGoal(input);
         } else {
             return HoverModeGoal(input);
@@ -80,7 +132,7 @@ public class PlayerCameraBehaviour : MonoBehaviour {
     private Vector3 TargetGoal() {
         if (transitioning) {
             return transform.position + transform.forward * flightLookAhead * transitionFlightRatio;
-        } else if (flight.enabled) {
+        } else if (mode.Mode == PlayerModeManager.PlayerMode.Flight) {
             return transform.position + transform.forward * flightLookAhead;
         } else {
             return transform.position;
@@ -114,6 +166,11 @@ public class PlayerCameraBehaviour : MonoBehaviour {
     }
 
     public void Transition(float transitionTime, bool toFlight) {
+        // reset camera angles
+        if (!toFlight) {
+            curVertAngle = vertAngle;
+        }
+
         StopAllCoroutines();
         StartCoroutine(TransitionRoutine(transitionTime, toFlight, transitioning));
     }

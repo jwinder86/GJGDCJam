@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using System.Collections;
 
 public class TitleScreenBehaviour : MonoBehaviour {
@@ -27,6 +28,6 @@ public class TitleScreenBehaviour : MonoBehaviour {
 
         yield return new WaitForSeconds(fade.fadeTime * 1.1f);
 
-        Application.LoadLevel("TestScene");
+        SceneManager.LoadScene("TestScene", LoadSceneMode.Single);
     }
 }
