@@ -9,9 +9,14 @@ public class ScalePlantBehaviour : PlantBehaviour {
     public bool randomizeYRotation;
     public AnimationCurve curve;
     public float yScaleRandomization = 0f;
-    new public Renderer renderer;
 
+    private Renderer[] renderers;
+    private LODGroup lod;
     private Vector3 goalScale;
+
+    protected void Awake() {
+        lod = GetComponent<LODGroup>();
+    }
 
     // Use this for initialization
     new void Start () {
@@ -23,7 +28,7 @@ public class ScalePlantBehaviour : PlantBehaviour {
         }
 
         goalScale = transform.localScale;
-        goalScale.y += Random.Range(-yScaleRandomization, yScaleRandomization);
+        goalScale.y *= 1f + Random.Range(-yScaleRandomization, yScaleRandomization);
     }
 
     public override void SetNormal(Vector3 normal) {
@@ -31,10 +36,20 @@ public class ScalePlantBehaviour : PlantBehaviour {
     }
 
     protected override void EnableRender(bool render) {
-        renderer.enabled = render;
+        if (renderers == null) {
+            renderers = GetComponentsInChildren<Renderer>();
+        }
+
+        for (int i = 0; i < renderers.Length; i++) {
+            renderers[i].enabled = render;
+        }
     }
 
     protected override IEnumerator SpawnRoutine() {
+        if (lod != null) {
+            lod.ForceLOD(0);
+        }
+
         transform.localScale = MIN_SCALE_VECTOR;
 
         for (float timer = 0f; timer < spawnTime; timer += Time.deltaTime) {
@@ -45,5 +60,8 @@ public class ScalePlantBehaviour : PlantBehaviour {
         }
 
         transform.localScale = goalScale;
+        if (lod != null) {
+            lod.ForceLOD(-1);
+        }
     }
 }

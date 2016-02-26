@@ -8,6 +8,7 @@ public class PlayerCameraBehaviour : MonoBehaviour {
 
     public float cameraDistance = 10f;
     public float cameraMoveTime = 0.3f;
+    public float cameraRadius = 0.25f;
 
     [Header ("Hover Settings")]
     public float vertAngle = 30f;
@@ -32,6 +33,7 @@ public class PlayerCameraBehaviour : MonoBehaviour {
     private float heavyShakeTimer;
     private Vector3 shakeOffset;
 
+    public Transform skyboxCamera;
     new private Transform camera;
     private PlayerModeManager mode;
 
@@ -42,10 +44,14 @@ public class PlayerCameraBehaviour : MonoBehaviour {
     private bool transitioning;
     private float transitionFlightRatio;
 
+    private int layerMask;
+
     void Awake () {
         camera = Camera.main.transform;
         mode = GetComponent<PlayerModeManager>();
-	}
+
+        layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Default");
+    }
 
     void Start() {
         camVelocity = Vector3.zero;
@@ -85,8 +91,21 @@ public class PlayerCameraBehaviour : MonoBehaviour {
             Input.GetAxis("LookVertical"));
 
         // ignore shake offset when smoothing camera movement
-        camera.position = Vector3.SmoothDamp(camera.position - shakeOffset, PositionGoal(input), ref camVelocity, cameraMoveTime);
-        camera.LookAt(TargetGoal());
+        Vector3 targetPos = TargetGoal();
+        Vector3 cameraPos = PositionGoal(input);
+
+        // raycast to handle camera collisions
+        // find distance before hitting something
+        Vector3 toCamera = (cameraPos - targetPos);
+        float goalDist = toCamera.magnitude;
+        toCamera = toCamera.normalized;
+        RaycastHit hit;
+        if (Physics.SphereCast(targetPos, cameraRadius, toCamera, out hit, goalDist, layerMask)) {
+            cameraPos = targetPos + toCamera * hit.distance;
+        }
+
+        camera.position = Vector3.SmoothDamp(camera.position - shakeOffset, cameraPos, ref camVelocity, cameraMoveTime);
+        camera.LookAt(targetPos);
 
         if (heavyShakeTimer > 0f) {
             shakeOffset = heavyShakeMagnitude * heavyShakeTimer * (Mathf.Sin(Time.time * heavyShakeSpeed * Y_COEF) * camera.up + Mathf.Cos(Time.time * heavyShakeSpeed * X_COEF) * camera.right);
@@ -97,6 +116,9 @@ public class PlayerCameraBehaviour : MonoBehaviour {
         }
 
         camera.position += shakeOffset;
+
+        skyboxCamera.position = Vector3.zero;
+        skyboxCamera.rotation = camera.rotation;
     }
 
     public void Shake(float time) {

@@ -8,7 +8,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 444118}
-  - 33: {fileID: 3387850}
   - 114: {fileID: 11482808}
   - 82: {fileID: 8212094}
   m_Layer: 0
@@ -30,13 +29,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!33 &3387850
-MeshFilter:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 180168}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!82 &8212094
 AudioSource:
   m_ObjectHideFlags: 1
@@ -125,7 +117,7 @@ MonoBehaviour:
   spawnDist: 20
   spawnDistRand: 0.6
   spawnTime: 2
-  maxRenderDist: 600
+  value: 100
   bottomPrefab: {fileID: 11443020, guid: bacd054fc0ae69d49b42758592fd20e0, type: 2}
   middlePrefab: {fileID: 11448124, guid: 752e23548cef47f418df72440fbfc661, type: 2}
   topPrefab: {fileID: 11447714, guid: 3477a8584c98ef3459db19aa946121ab, type: 2}
@@ -221,6 +213,10 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: MaxDistance
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: value
       value: 100
       objectReference: {fileID: 0}
     m_RemovedComponents: []

@@ -559,7 +559,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 11413588, guid: fbebeca2efb707a4587a49bdb5dd3ac0, type: 2}
+  - {fileID: 11471738, guid: fbebeca2efb707a4587a49bdb5dd3ac0, type: 2}
   - {fileID: 11437104, guid: 93b9f59ed2e1b5b40854a8e8c7d765e2, type: 2}
   - {fileID: 11487490, guid: 5094b4e29ded0d84bba910a2049cf9c6, type: 2}
   randomPrefab: 0

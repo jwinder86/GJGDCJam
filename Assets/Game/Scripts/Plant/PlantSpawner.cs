@@ -16,95 +16,115 @@ public class PlantSpawner : MonoBehaviour {
     public bool minOnePlant = false;
 
     public bool visInEditor;
+    public bool extraLogging = false;
 
-    public int updateFrames = 10;
-    private int curUpdateFrame = 0;
+    //public int updateFrames = 10;
+    //private int curUpdateFrame = 0;
+    private int totalValue;
+    public int TotalValue {
+        get { return totalValue; }
+    }
 
-    private PlayerMovementBehaviour player;
+    private int currentValue;
+    public int CurrentValue {
+        get { return currentValue; }
+    }
+
     private List<PlantBehaviour> plants;
     private float updateRadius;
+    private int layerMask;
 
     void Awake() {
-        player = FindObjectOfType<PlayerMovementBehaviour>();
+        layerMask = (1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("PlantObstacle"));
+
+        totalValue = -1;
+        currentValue = -1;
     }
 
     // Use this for initialization
     void Start() {
-        plants = new List<PlantBehaviour>();
-
-        PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
-        List<Vector2> samples = sampler.generateSamples();
-
-        if (randomPrefab) {
-            GeneratePlants(prefabs, samples, Quaternion.identity);
-        } else {
-            float rot = 0f;
-            foreach (PlantBehaviour prefab in prefabs) {
-                Quaternion rotAdjust = Quaternion.AngleAxis(rot, Vector3.up);
-                GeneratePlants(new PlantBehaviour[] { prefab }, samples, rotAdjust);
-
-                rot += 360f / prefabs.Length;
-            }
+        // remove visualizer
+        PlantSpawnerVisualizer vis = GetComponentInChildren<PlantSpawnerVisualizer>();
+        if (vis) {
+            vis.gameObject.SetActive(false);
         }
 
         // calc update radius
         updateRadius = radius;
         foreach (PlantBehaviour prefab in prefabs) {
             float prefabRadius = radius + prefab.spawnDist * (1f + prefab.spawnDistRand);
-            radius = Mathf.Max(radius, prefabRadius);
+            updateRadius = Mathf.Max(updateRadius, prefabRadius);
         }
     }
 
-    void Update() {
-        Vector3 playerPos = player.transform.position;
-        float playerDist = (transform.position - playerPos).magnitude;
+    public void GeneratePlants() {
+        plants = new List<PlantBehaviour>();
 
-        if (playerDist < updateRadius) {
-            for (int i = 0; i < plants.Count; i++) {
-                plants[i].UpdatePlayerPos(playerPos);
-            }
+        if (randomPrefab) {
+            GeneratePlants(prefabs);
         } else {
-            for (int i = curUpdateFrame; i < plants.Count; i += updateFrames) {
-                plants[i].UpdatePlayerPos(playerPos);
+            foreach (PlantBehaviour prefab in prefabs) {
+                GeneratePlants(new PlantBehaviour[] { prefab });
             }
-            curUpdateFrame++;
-            curUpdateFrame = curUpdateFrame % updateFrames;
+        }
+
+        // calc total value
+        totalValue = 0;
+        currentValue = 0;
+        foreach (PlantBehaviour plant in plants) {
+            totalValue += plant.value;
         }
     }
 
-	void GeneratePlants(PlantBehaviour[] selectedPrefabs, List<Vector2> samples, Quaternion rotAdjust) {
-        //Debug.Log("Sample count: " + samples.Count);
-
-        // force a single plant
-        if (samples.Count == 0 && minOnePlant) {
-            samples.Add(Vector2.zero);
-        }
-
-        for (int i = 0; i < samples.Count; i++) {
-            Vector2 s = samples[i];
-            Vector3 pos = rotAdjust * new Vector3(s.x, height / 2f, s.y);
-            Vector3 worldPos = transform.TransformPoint(pos);
-
-            RaycastHit hit;
-            if (Physics.Raycast(worldPos, -transform.up, out hit, height)) {
-                if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") && 
-                    Vector3.Angle(transform.up, hit.normal) <= maxAngle) {
-                    PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), worldPos + hit.distance * -transform.up, Quaternion.identity);
-                    plant.transform.parent = transform;
-                    plant.SetNormal(hit.normal);
-
-                    plants.Add(plant);
+    public void UpdatePlants(Vector3 playerPos) {
+        float playerDist = (transform.position - playerPos).magnitude;
+        
+        if (playerDist < updateRadius) {
+            currentValue = 0;
+            for (int i = 0; i < plants.Count; i++) {
+                if (!plants[i].Spawned) {
+                    plants[i].UpdatePlayerPos(playerPos);
+                } else {
+                    currentValue += plants[i].value;
                 }
             }
         }
+    }
 
-        // remove visualizer
-        PlantSpawnerVisualizer vis = GetComponentInChildren<PlantSpawnerVisualizer>();
-        if (vis) {
-            vis.gameObject.SetActive(false);
+	private void GeneratePlants(PlantBehaviour[] selectedPrefabs) {
+        PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
+        List<Vector2> samples = sampler.generateSamples(delegate(Vector2 s) { return PlacePlant(s, selectedPrefabs); });
+
+        if (extraLogging) { Debug.Log("Sample count: " + samples.Count); }
+
+        // force a single plant
+        if (samples.Count == 0 && minOnePlant) {
+            PlacePlant(Vector2.zero, selectedPrefabs);
+            samples.Add(Vector2.zero);
         }
-        
 	}
+
+    private bool PlacePlant(Vector2 sample, PlantBehaviour[] selectedPrefabs) {
+        Vector3 pos = new Vector3(sample.x, height / 2f, sample.y);
+        Vector3 worldPos = transform.TransformPoint(pos);
+
+        RaycastHit hit;
+        if (Physics.Raycast(worldPos, -transform.up, out hit, height, layerMask)) {
+            if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") &&
+                Vector3.Angle(transform.up, hit.normal) <= maxAngle) {
+                PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), worldPos + hit.distance * -transform.up, Quaternion.identity);
+                plant.transform.parent = transform;
+                plant.SetNormal(hit.normal);
+
+                plants.Add(plant);
+                return true;
+            }
+
+            if (extraLogging) { Debug.Log("Raycast hit non-ground at " + worldPos); }
+        } else if (extraLogging) { Debug.Log("Raycast missed at" + worldPos); }
+
+        return false;
+    }
 
     PlantBehaviour ChoosePrefab(PlantBehaviour[] prefabs) {
         return prefabs[Random.Range(0, prefabs.Length)];

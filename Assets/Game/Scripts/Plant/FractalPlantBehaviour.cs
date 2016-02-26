@@ -19,7 +19,6 @@ public class FractalPlantBehaviour : PlantBehaviour {
     new private AudioSource audio;
 
     void Awake() {
-
         audio = GetComponent<AudioSource>();
 
         GeneratePlant();

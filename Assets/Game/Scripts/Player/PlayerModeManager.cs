@@ -84,7 +84,7 @@ public class PlayerModeManager : MonoBehaviour {
                 setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
             }
 
-            if (Input.GetKeyDown(KeyCode.Escape)) {
+            if (Input.GetKeyDown(KeyCode.Escape) || (Input.GetKey(KeyCode.JoystickButton6) && Input.GetKey(KeyCode.JoystickButton7))) {
                 StartCoroutine(ExitRoutine());
             }
 

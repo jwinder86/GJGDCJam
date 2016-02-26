@@ -26,6 +26,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 489930}
+  - 114: {fileID: 11421012}
   m_Layer: 9
   m_Name: bigIsland
   m_TagString: Untagged
@@ -546,7 +547,17 @@ MonoBehaviour:
   maxAngle: 15
   minOnePlant: 0
   visInEditor: 0
-  updateFrames: 20
+--- !u!114 &11421012
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 106706}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 94b08beb1e58a3143b214af53b35b03f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &11423172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -569,7 +580,6 @@ MonoBehaviour:
   maxAngle: 15
   minOnePlant: 0
   visInEditor: 0
-  updateFrames: 20
 --- !u!114 &11431838
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -582,7 +592,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabs:
-  - {fileID: 11413588, guid: fbebeca2efb707a4587a49bdb5dd3ac0, type: 2}
+  - {fileID: 11471738, guid: fbebeca2efb707a4587a49bdb5dd3ac0, type: 2}
   - {fileID: 11437104, guid: 93b9f59ed2e1b5b40854a8e8c7d765e2, type: 2}
   - {fileID: 11487490, guid: 5094b4e29ded0d84bba910a2049cf9c6, type: 2}
   randomPrefab: 0
@@ -592,7 +602,6 @@ MonoBehaviour:
   maxAngle: 15
   minOnePlant: 0
   visInEditor: 0
-  updateFrames: 20
 --- !u!114 &11451596
 MonoBehaviour:
   m_ObjectHideFlags: 1

@@ -11,7 +11,9 @@ Shader "Toon/Lit Cutout" {
 		LOD 200
 		
 CGPROGRAM
-#pragma surface surf ToonRamp alphatest:_Cutoff
+#pragma multi_compile _ LOD_FADE_CROSSFADE
+#pragma surface surf ToonRamp vertex:vert alphatest:_Cutoff
+#pragma target 3.0
 
 sampler2D _Ramp;
 
@@ -39,12 +41,22 @@ float4 _Color;
 
 struct Input {
 	float2 uv_MainTex : TEXCOORD0;
+    UNITY_DITHER_CROSSFADE_COORDS
 };
+
+void vert(inout appdata_full v, out Input o) {
+    UNITY_INITIALIZE_OUTPUT(Input, o);
+    UNITY_TRANSFER_DITHER_CROSSFADE(o, v.vertex);
+}
 
 void surf (Input IN, inout SurfaceOutput o) {
 	half4 c = tex2D(_MainTex, IN.uv_MainTex) * _Color;
 	o.Albedo = c.rgb;
 	o.Alpha = c.a;
+
+#ifdef LOD_FADE_CROSSFADE
+    UNITY_APPLY_DITHER_CROSSFADE(IN);
+#endif
 }
 ENDCG
 

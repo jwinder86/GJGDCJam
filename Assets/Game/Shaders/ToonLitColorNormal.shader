@@ -6,11 +6,13 @@ Shader "Toon/Lit Color Normal" {
     }
 
     SubShader {
-        Tags { "RenderType" = "Opaque" }
+        Tags { "RenderType" = "TransparentCutout" "Queue" = "AlphaTest" }
         LOD 200
 
 CGPROGRAM
-#pragma surface surf ToonRamp
+#pragma multi_compile _ LOD_FADE_CROSSFADE
+#pragma surface surf ToonRamp vertex:vert
+#pragma target 3.0
 
 sampler2D _Ramp;
 sampler2D _BumpMap;
@@ -38,12 +40,22 @@ float4 _Color;
 
 struct Input {
     float2 uv_BumpMap : TEXCOORD0;
+    UNITY_DITHER_CROSSFADE_COORDS
 };
+
+void vert(inout appdata_full v, out Input o) {
+    UNITY_INITIALIZE_OUTPUT(Input, o);
+    UNITY_TRANSFER_DITHER_CROSSFADE(o, v.vertex);
+}
 
 void surf(Input IN, inout SurfaceOutput o) {
     o.Albedo = _Color.rgb;
     o.Alpha = _Color.a;
     o.Normal = UnpackNormal(tex2D(_BumpMap, IN.uv_BumpMap));
+
+#ifdef LOD_FADE_CROSSFADE
+    UNITY_APPLY_DITHER_CROSSFADE(IN);
+#endif
 }
 ENDCG
 

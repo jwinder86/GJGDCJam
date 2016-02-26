@@ -84,7 +84,7 @@ Material:
       data:
         first:
           name: _SkyColor3
-        second: {r: 0.382302, g: 0.47585875, b: 0.603, a: 0}
+        second: {r: 0.483916, g: 0.608582, b: 0.778, a: 0}
       data:
         first:
           name: _SunColor
