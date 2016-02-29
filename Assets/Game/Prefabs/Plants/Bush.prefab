@@ -10,7 +10,7 @@ GameObject:
   - 4: {fileID: 475670}
   - 33: {fileID: 3335778}
   - 23: {fileID: 2369166}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TopLOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -27,7 +27,7 @@ GameObject:
   - 4: {fileID: 446824}
   - 33: {fileID: 3389916}
   - 23: {fileID: 2393816}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: MiddleLOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -44,7 +44,7 @@ GameObject:
   - 4: {fileID: 435024}
   - 33: {fileID: 3323932}
   - 23: {fileID: 2375684}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BottomLOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -61,7 +61,7 @@ GameObject:
   - 4: {fileID: 409178}
   - 33: {fileID: 3362432}
   - 23: {fileID: 2379972}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: TopLOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -78,7 +78,7 @@ GameObject:
   - 4: {fileID: 432968}
   - 33: {fileID: 3341324}
   - 23: {fileID: 2346120}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: MiddleLOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -95,7 +95,7 @@ GameObject:
   - 4: {fileID: 453050}
   - 33: {fileID: 3359360}
   - 23: {fileID: 2317752}
-  m_Layer: 0
+  m_Layer: 13
   m_Name: BottomLOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -112,7 +112,9 @@ GameObject:
   - 4: {fileID: 455986}
   - 205: {fileID: 20574180}
   - 114: {fileID: 11439320}
-  m_Layer: 0
+  - 135: {fileID: 13509426}
+  - 114: {fileID: 11450460}
+  m_Layer: 13
   m_Name: Bush
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,7 +188,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 187898}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 59.76, y: 36.07, z: 401.96}
+  m_LocalPosition: {x: 636.6312, y: 31.15, z: -15.380967}
   m_LocalScale: {x: 1, y: 1.5, z: 1}
   m_Children:
   - {fileID: 432968}
@@ -440,7 +442,30 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   yScaleRandomization: 0.2
-  launchChance: 1
+  playRustleSound: 1
+--- !u!114 &11450460
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187898}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: be3874246abae754090958727004a9a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!135 &13509426
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 187898}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!205 &20574180
 LODGroup:
   m_ObjectHideFlags: 1
@@ -484,6 +509,14 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: m_LODs.Array.data[0].fadeTransitionWidth
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 13
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: playRustleSound
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

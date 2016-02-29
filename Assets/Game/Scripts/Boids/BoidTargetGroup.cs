@@ -5,6 +5,7 @@ public class BoidTargetGroup : MonoBehaviour {
 
     public float targetRadius;
     public float groupRadius;
+    public float randomHeight = 20f;
     public int count;
 
     private BoidTarget firstTarget;
@@ -37,7 +38,7 @@ public class BoidTargetGroup : MonoBehaviour {
         GameObject obj = new GameObject("Target " + (index + 1));
         BoidTarget target = obj.AddComponent<BoidTarget>();
         target.transform.parent = transform;
-        target.transform.position = calcPos(index);
+        target.transform.position = calcPos(index) + new Vector3(0f, Random.Range(0f, randomHeight), 0f);
         target.radius = targetRadius;
 
         return target;

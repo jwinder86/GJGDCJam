@@ -36,7 +36,7 @@ public class PlayerModeManager : MonoBehaviour {
     private PlayerFlightBehaviour flight;
     private PlayerCameraBehaviour cam;
     private PlayerLeavesBehaviour leavesEffect;
-    private RustleSoundManager rustle;
+    private SoundManager soundManager;
     private PlayerPhysicsBehaviour phys;
     private float defaultDrag;
 
@@ -51,11 +51,12 @@ public class PlayerModeManager : MonoBehaviour {
         flight = GetComponent<PlayerFlightBehaviour>();
         cam = GetComponent<PlayerCameraBehaviour>();
         leavesEffect = GetComponentInChildren<PlayerLeavesBehaviour>();
-        rustle = GetComponent<RustleSoundManager>();
         phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
 
         animator = GetComponentInChildren<Animator>();
         audio = GetComponent<AudioSource>();
+
+        soundManager = FindObjectOfType<SoundManager>();
     }
 
 	// Use this for initialization
@@ -131,7 +132,7 @@ public class PlayerModeManager : MonoBehaviour {
 
     public void HandleLeavesTrigger() {
         leavesEffect.EmitLeaves();
-        rustle.PlaySound(transform.position);
+        soundManager.PlaySound(SoundType.Rustle, transform.position);
     }
 
     public void HandleCollision(Collision collision) {

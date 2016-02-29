@@ -33,11 +33,13 @@ public class FractalPlantComponent : MonoBehaviour {
 
         // higher levels are transform only
         if (level < maxRendererLevel) {
-            Renderer r = GetComponentInChildren<Renderer>();
-            if (r.gameObject == gameObject) {
-                DestroyImmediate(r);
-            } else {
-                DestroyImmediate(r.gameObject);
+            Renderer[] r = GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < r.Length; i++) {
+                if (r[i].gameObject == gameObject) {
+                    DestroyImmediate(r[i]);
+                } else {
+                    DestroyImmediate(r[i].gameObject);
+                }
             }
 
             Collider c = GetComponentInChildren<Collider>();

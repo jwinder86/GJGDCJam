@@ -16,14 +16,24 @@ public class PoissonDiskSampler {
         this.k = k;
     }
 
-    public List<Vector2> generateSamples(PlaceSample place) {
+    public int generateSamples(PlaceSample place, List<Vector2> externalSamples = null) {
         List<Vector2> samples = new List<Vector2>();
         List<Vector2> active = new List<Vector2>();
         SpacialLookup lookup = new SpacialLookup(radius, minDist);
 
+        // add external samples
+        if (externalSamples != null) {
+            Debug.Log("Sampler adding " + externalSamples.Count + " external samples");
+            foreach (Vector2 ex in externalSamples) {
+                lookup.Insert(ex);
+            }
+        }
+
         if (!AddFirstSamples(ref samples, ref active, ref lookup, place)) {
-            Debug.LogError("Unable to add first sample.");
-            return samples;
+            if (!AddFirstSamples(ref samples, ref active, ref lookup, place)) {
+                Debug.LogError("Unable to add first sample after 2 attempts.");
+                return samples.Count;
+            }
         }
 
         while (active.Count > 0) {
@@ -47,7 +57,7 @@ public class PoissonDiskSampler {
             }
         }
 
-        return samples;
+        return samples.Count;
     }
 
     private bool validateAndAddSample(Vector2 sample, ref List<Vector2> samples, ref List<Vector2> active, ref SpacialLookup lookup, PlaceSample place) {
@@ -136,8 +146,8 @@ public class PoissonDiskSampler {
 
             for (int x = posX-1; x <= posX+1; x++) {
                 for (int y = posY-1; y <= posY+1; y++) {
-                    if (x >= 0 && x < dim &&
-                            y >= 0 && y < dim &&
+                    if (validIndex(x) &&
+                            validIndex(y) &&
                             data[x, y].HasValue) {
                         Vector2 other = data[x, y].Value;
                         if ((pos - other).sqrMagnitude < distSqr) {
@@ -151,20 +161,30 @@ public class PoissonDiskSampler {
         }
 
         public void Insert(Vector2 pos) {
-            data[
-                posToIndex(pos.x),
-                posToIndex(pos.y)] = pos;
+            if (validPosition(pos)) {
+                data[
+                    posToIndex(pos.x),
+                    posToIndex(pos.y)] = pos;
+            }
+        }
+
+        private bool validPosition(Vector2 pos) {
+            int indexX = posToIndex(pos.x);
+            int indexY = posToIndex(pos.y);
+
+            if (validIndex(indexX) && validIndex(indexY)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        private bool validIndex(int index) {
+            return (index >= 0 && index < dim);
         }
 
         private int posToIndex(float pos) {
-            int index = Mathf.FloorToInt(pos / cellSize) + halfDim;
-
-            if (index < 0 || index > data.Length) {
-                Debug.LogError("Bad index " + index + " from pos " + pos + " halfDim " + halfDim);
-                return 0;
-            } else {
-                return index;
-            }
+            return Mathf.FloorToInt(pos / cellSize) + halfDim;
         }
     }
 }

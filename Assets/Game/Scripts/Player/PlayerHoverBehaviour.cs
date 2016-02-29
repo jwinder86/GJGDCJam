@@ -16,7 +16,7 @@ public class PlayerHoverBehaviour : MonoBehaviour {
     private PlayerPhysicsBehaviour phys;
 
 	void Awake () {
-        layerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("BoidObstacle") | 1 << LayerMask.NameToLayer("Boid") | 1 << LayerMask.NameToLayer("PlantObstacle"));
+        layerMask = ~(1 << LayerMask.NameToLayer("Player") | 1 << LayerMask.NameToLayer("BoidObstacle") | 1 << LayerMask.NameToLayer("Boid") | 1 << LayerMask.NameToLayer("PlantObstacle") | 1 << LayerMask.NameToLayer("Leaves"));
         antiGravForce = -Physics.gravity.y;
         phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
     }

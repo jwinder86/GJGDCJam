@@ -1,0 +1,266 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &108404
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 410840}
+  - 114: {fileID: 11483200}
+  - 114: {fileID: 11487692}
+  - 135: {fileID: 13529964}
+  m_Layer: 10
+  m_Name: WhaleBoid
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &410840
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108404}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 858.7229, y: 267.11804, z: -158.95442}
+  m_LocalScale: {x: 8, y: 8, z: 8}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+--- !u!114 &11483200
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9cfb1b19befa184c9d10f7b7c049806, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  headPrefab: {fileID: 11430774, guid: 4e6d4428dfc5f1d4192472686d9a8568, type: 2}
+  segmentPrefab: {fileID: 11462426, guid: fa12d2e645d0d764a9929927123e941a, type: 2}
+  increasingSegmentPrefab: {fileID: 11429912, guid: bbfe196accbf308438696ce44c4a718f,
+    type: 2}
+  tailPrefab: {fileID: 11411530, guid: 63c96c8643e312b46819057c3517f5e1, type: 2}
+  segmentCount: 5
+  increasingSegmentCount: 2
+  wingedSegments: 2
+  dorsalFinSegment: 2
+  segmentScaleRatio: 0.82
+--- !u!114 &11487692
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b400c6a7f582a804ea1c70bc332c4b35, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  type: 2
+  sensorRadius: 80
+  avoidanceDist: 60
+  centeringWeight: 0.01
+  steeringWeight: 0.05
+  avoidanceWeight: 0.5
+  targettingWeight: 0.01
+  rotSpeed: 30
+  maxSpeed: 25
+  speedVariance: 0.3
+  physAvoidanceMultiplier: 40
+  boidRadius: 4
+  rayCastDist: 30
+  targetPlayerWhenClose: 0
+  flockWithPlayer: 0
+  playerSensorRadius: 40
+  playerSpeedMult: 1.5
+  launchTime: 3
+  maxRoll: 60
+  rollCoef: 1
+  rollTime: 0.4
+  callDelayTime: 3
+  randomCallStartDelay: 2
+  doubleCallProbability: 0.3
+  trippleCallProbability: -1
+  maxDist: 3000
+  maxDistFromTarget: 100
+  target: {fileID: 0}
+--- !u!135 &13529964
+SphereCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 108404}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 4
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &100100000
+Prefab:
+  m_ObjectHideFlags: 1
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: maxDist
+      value: 3000
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: sensorRadius
+      value: 80
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avoidanceDist
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: steeringWeight
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: avoidanceWeight
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rotSpeed
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxSpeed
+      value: 25
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: boidRadius
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rayCastDist
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: maxDistFromTarget
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 9333e393f317dec4d9903965206b2cd1, type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_UseLightProbes
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_ReflectionProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalScale.x
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalScale.y
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LocalScale.z
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: segmentCount
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rollCoef
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: rollTime
+      value: 0.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: type
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: targetPlayerWhenClose
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: wingedSegments
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: speedVariance
+      value: 0.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: segmentScaleRatio
+      value: 0.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: tailPrefab
+      value: 
+      objectReference: {fileID: 11411530, guid: 63c96c8643e312b46819057c3517f5e1,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: flockWithPlayer
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: dorsalFinSegment
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: headPrefab
+      value: 
+      objectReference: {fileID: 11430774, guid: 4e6d4428dfc5f1d4192472686d9a8568,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: m_Radius
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: targettingWeight
+      value: 0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: physAvoidanceMultiplier
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: increasingSegmentPrefab
+      value: 
+      objectReference: {fileID: 11429912, guid: bbfe196accbf308438696ce44c4a718f,
+        type: 2}
+    - target: {fileID: 0}
+      propertyPath: increasingSegmentCount
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: callDelayTime
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: randomCallStartDelay
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: trippleCallProbability
+      value: -1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 0}
+  m_RootGameObject: {fileID: 108404}
+  m_IsPrefabParent: 1

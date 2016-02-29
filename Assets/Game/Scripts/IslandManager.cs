@@ -4,17 +4,28 @@ using System.Collections;
 public class IslandManager : MonoBehaviour {
 
     public float minAmount = 0.05f;
-    public float maxAmount = 0.85f;
+    public float maxAmount = 0.9f;
+    public float fullSaturationPercent = 0.3f;
+    public float fullBoidPercent = 0.9f;
 
     public int boidCount;
+    public int boidBurstCount = 3;
     private int curBoidCount;
-    public int miniBoidCount;
-    private int curMiniBoidCount;
+    //public int miniBoidCount;
+    //private int curMiniBoidCount;
+    public int bigBoidCount = 2;
+    private bool spawnedBigBoid;
+
+    public float saturationRadius;
+    private float saturationValue;
+    public float SaturationValue {
+        get { return saturationValue; }
+    }
 
     public Transform boidSpawn;
-    public Transform miniBoidSpawn;
+    //public Transform miniBoidSpawn;
     public BoidTargetGroup boidTargets;
-    public BoidTargetGroup miniBoidTargets;
+    //public BoidTargetGroup miniBoidTargets;
 
     private PlantSpawner[] spawners;
     private BoidManager boidManager;
@@ -30,13 +41,14 @@ public class IslandManager : MonoBehaviour {
 
     void Start() {
         curBoidCount = 0;
-        curMiniBoidCount = 0;
+        //curMiniBoidCount = 0;
+        spawnedBigBoid = false;
 
         // generate all plants
         for (int i = 0; i < spawners.Length; i++) {
             spawners[i].GeneratePlants();
-            System.GC.Collect();
         }
+        System.GC.Collect();
     }
 
 	// Update is called once per frame
@@ -52,13 +64,19 @@ public class IslandManager : MonoBehaviour {
             current += spawners[i].CurrentValue;
         }
 
-        UpdatePercentage((float)current / (float)total);
+        float distToPlayer = (transform.position - playerPos).magnitude;
+        float percent = UpdatePercentage((float)current / (float)total, distToPlayer);
+
+        
 	}
 
-    private void UpdatePercentage(float percentage) {
+    private float UpdatePercentage(float percentage, float distToPlayer) {
         float adjPercent = Mathf.Clamp01(Mathf.InverseLerp(minAmount, maxAmount, percentage));
 
-        int goalBoids = Mathf.FloorToInt(adjPercent * boidCount);
+        saturationValue = Mathf.Clamp01(Mathf.InverseLerp(saturationRadius * 2f, saturationRadius, distToPlayer))* Mathf.Clamp01(Mathf.InverseLerp(0f, fullSaturationPercent, adjPercent));
+
+        float boidPercent = Mathf.Clamp01(Mathf.InverseLerp(0f, fullBoidPercent, adjPercent));
+        int goalBoids = Mathf.FloorToInt((boidPercent * boidCount) / boidBurstCount) * boidBurstCount;
         while (curBoidCount < goalBoids) {
             float angle = Random.Range(0f, 360f);
             boidManager.CreateBoid(boidSpawn.position,
@@ -69,6 +87,17 @@ public class IslandManager : MonoBehaviour {
             Debug.Log("Boid Spawned!");
         }
 
+        if (adjPercent >= 1f && !spawnedBigBoid) {
+            for (int i = 0; i < bigBoidCount; i++) {
+                float angle = Random.Range(0f, 360f);
+                boidManager.CreateBigBoid(boidSpawn.position,
+                    new Vector3(Mathf.Cos(angle), 0f, Mathf.Sin(angle)));
+                spawnedBigBoid = true;
+
+                Debug.Log("Big Boid Spawned!");
+            }
+        }
+
         /*int goalMiniBoids = Mathf.FloorToInt(adjPercent * miniBoidCount);
         while (curMiniBoidCount < goalMiniBoids) {
             float angle = Random.Range(0f, 360f);
@@ -77,5 +106,7 @@ public class IslandManager : MonoBehaviour {
                 miniBoidTargets.FirstTarget);
             curMiniBoidCount++;
         }*/
+
+        return adjPercent;
     }
 }

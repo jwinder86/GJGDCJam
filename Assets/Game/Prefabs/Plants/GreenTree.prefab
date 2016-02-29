@@ -10,6 +10,7 @@ GameObject:
   - 4: {fileID: 444118}
   - 114: {fileID: 11482808}
   - 82: {fileID: 8220702}
+  - 205: {fileID: 20517670}
   m_Layer: 0
   m_Name: GreenTree
   m_TagString: Untagged
@@ -24,7 +25,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 180168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.29, y: 3.69, z: 11.88}
+  m_LocalPosition: {x: 627.5373, y: 20.836578, z: -23.500893}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
@@ -139,6 +140,26 @@ MonoBehaviour:
     m_RotationOrder: 0
   height: 4
   maxRendererHeight: 1
+  spawnDelay: 0.1
+--- !u!205 &20517670
+LODGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 180168}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0, z: 0}
+  m_Size: 1
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LODs:
+  - screenRelativeHeight: 0.39595824
+    fadeTransitionWidth: 0.05
+    renderers: []
+  - screenRelativeHeight: 0.079475045
+    fadeTransitionWidth: 0.1
+    renderers: []
+  m_Enabled: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -225,6 +246,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: value
       value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LODs.Array.data[0].screenRelativeHeight
+      value: 0.39595824
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: m_LODs.Array.data[1].screenRelativeHeight
+      value: 0.079475045
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: spawnDelay
+      value: 0.1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}

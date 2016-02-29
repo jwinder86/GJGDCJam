@@ -50,7 +50,7 @@ public class PlayerCameraBehaviour : MonoBehaviour {
         camera = Camera.main.transform;
         mode = GetComponent<PlayerModeManager>();
 
-        layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Default");
+        layerMask = 1 << LayerMask.NameToLayer("Ground") | 1 << LayerMask.NameToLayer("Default") | 1 << LayerMask.NameToLayer("BoidSegment");
     }
 
     void Start() {

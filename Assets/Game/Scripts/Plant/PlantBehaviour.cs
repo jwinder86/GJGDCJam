@@ -14,6 +14,11 @@ public abstract class PlantBehaviour : MonoBehaviour {
     }
     private float sqrSpawnDist;
 
+    protected SoundManager soundManager;
+    public SoundManager SoundManager {
+        set { soundManager = value; }
+    }
+
     // Use this for initialization
 	protected void Start () {
         spawned = false;
@@ -23,7 +28,7 @@ public abstract class PlantBehaviour : MonoBehaviour {
         EnableRender(false);
 
         // testing
-        StartCoroutine(DelaySpawn());
+        //StartCoroutine(DelaySpawn());
 	}
 
     // Update is called once per frame

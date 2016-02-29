@@ -10,6 +10,8 @@ public class ScalePlantBehaviour : PlantBehaviour {
     public AnimationCurve curve;
     public float yScaleRandomization = 0f;
 
+    public bool playRustleSound = false;
+
     private Renderer[] renderers;
     private LODGroup lod;
     private Vector3 goalScale;
@@ -48,6 +50,10 @@ public class ScalePlantBehaviour : PlantBehaviour {
     protected override IEnumerator SpawnRoutine() {
         if (lod != null) {
             lod.ForceLOD(0);
+        }
+
+        if (playRustleSound) {
+            soundManager.PlaySound(SoundType.ShortRustle, transform.position);
         }
 
         transform.localScale = MIN_SCALE_VECTOR;

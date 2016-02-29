@@ -8,40 +8,68 @@ public enum BoidState {
     Disabled
 }
 
+public enum BoidType {
+    Wisp,
+    Bird,
+    Giant
+}
+
 public class BoidBehaviour : MonoBehaviour {
 
     private int sensorLayerMask;
     private int collisionLayerMask;
 
-    public float sensorRadius = 20f;
+    public BoidType type = BoidType.Bird;
 
+    [Header("Flocking")]
+    public float sensorRadius = 20f;
     public float avoidanceDist = 8f;
     public float centeringWeight = 0.01f;
     public float steeringWeight = 0.125f;
     public float avoidanceWeight = 0.1f;
     public float targettingWeight = 0.005f;
-    public float launchTime = 3f;
 
     public float rotSpeed = 30f;
+    public float maxSpeed = 10f;
+    public float speedVariance = 0.3f;
+    private float noiseOffset;
+
+    [Header("Obstacle avoidance")]
+    public float physAvoidanceMultiplier = 10f;
+    public float boidRadius = 0.5f;
+    public float rayCastDist = 10f;
+
+    [Header("Player Flocking")]
+    public bool targetPlayerWhenClose = true;
+    public bool flockWithPlayer = true;
+    private bool flockedWithPlayerLastFrame;
+    public float playerSensorRadius = 40f;
+    public float playerSpeedMult = 1.5f;
+
+    [Header("Animation")]
+    public float launchTime = 3f;
     private float roll, rollVelocity;
     public float maxRoll = 60f;
     public float rollCoef = 0.1f;
     public float rollTime = 0.2f;
 
-    public float physAvoidanceMultiplier = 10f;
-    public float boidRadius = 0.5f;
-    public float rayCastDist = 10f;
+    public float Roll {
+        get { return roll; }
+    }
 
-    public float maxSpeed = 10f;
-    public float speedVariance = 0.3f;
-    private float noiseOffset;
+    [Header("Calling")]
+    public float callDelayTime;
+    private float callDelayTimeRemaining;
 
+    public float randomCallStartDelay = 0.3f;
+    public float doubleCallProbability = 0.3f;
+    public float trippleCallProbability = 0.3f;
+
+    [Header("Performance/Culling")]
     public float maxDist = 200f;
     public float maxDistFromTarget = 50f;
 
-    public float playerSensorRadius = 40f;
-    public float playerSpeedMult = 1.5f;
-
+    [HideInInspector]
     public BoidTarget target;
 
     private Vector3 velocity;
@@ -52,6 +80,21 @@ public class BoidBehaviour : MonoBehaviour {
 
     private Renderer[] renderers;
     private bool renEnabled;
+
+    private SegmentBehaviour[] segments;
+    public SegmentBehaviour[] Segments {
+        get {
+            if (segments == null) {
+                segments = GetComponentsInChildren<SegmentBehaviour>();
+            }
+            return segments;
+        }
+    }
+
+    private SoundManager soundManager;
+    public SoundManager SoundManager {
+        set { soundManager = value; }
+    }
 
     private static Dictionary<BoidTarget, int> scratch;
 
@@ -75,17 +118,22 @@ public class BoidBehaviour : MonoBehaviour {
 
         roll = 0f;
         rollVelocity = 0f;
+
+        callDelayTimeRemaining = 0f;
+
+        flockedWithPlayerLastFrame = false;
 	}
 	
 	// Update is called once per frame
-	public void UpdatePosition (Vector3 playerPosition, Vector3 playerVelocity) {
+	public void UpdatePosition (Vector3 playerPosition, Vector3 playerVelocity, bool parentEnabled) {
+        callDelayTimeRemaining -= Time.deltaTime;
+
         Vector3 toPlayer = playerPosition - transform.position;
         float toPlayerDist = toPlayer.magnitude;
 
         // disable at set distance
         if (state == BoidState.Flying && toPlayerDist > maxDist) {
             state = BoidState.Disabled;
-            EnableRenderers(false);
 
             // move within range of target
             if (target != null) {
@@ -97,12 +145,13 @@ public class BoidBehaviour : MonoBehaviour {
             }
         } else if (state == BoidState.Disabled && toPlayerDist <= maxDist) {
             state = BoidState.Flying;
-            EnableRenderers(true);
         }
 
         if (state == BoidState.Flying) {
             FlyUpdate(playerPosition, playerVelocity);
         }
+
+        EnableRenderers(state != BoidState.Disabled && parentEnabled);
 	}
 
     private void EnableRenderers(bool newRenEnabled) {
@@ -138,8 +187,8 @@ public class BoidBehaviour : MonoBehaviour {
         }
 
         for (int i = 0; i < colliders.Length; i++) {
-            BoidBehaviour boid = colliders[i].GetComponent<BoidBehaviour>();
-            if (boid != null && boid != this) {
+            BoidBehaviour boid = GetComponentCache.Instance.GetComponent<BoidBehaviour>(colliders[i]);
+            if (boid != null && boid != this && boid.type == type) {
                 flockCenter += boid.transform.position;
                 flockVelocity += boid.velocity;
                 count++;
@@ -154,12 +203,29 @@ public class BoidBehaviour : MonoBehaviour {
                     target = SelectGroupTarget(ref scratch, target, boid.target);
                 }
 
+                // also avoid segments
+                if (type == BoidType.Giant) {
+                    SegmentBehaviour[] boidSegments = boid.Segments;
+                    for (int j = 0; j < boidSegments.Length; j++) {
+                        Vector3 toSegment = boidSegments[j].transform.position - transform.position;
+                        float toSegmentDist = toSegment.magnitude;
+                        if (toSegmentDist < avoidanceDist) {
+                            avoidance -= (toSegment / toSegmentDist) * (avoidanceDist - toSegmentDist);
+                        }
+                    }
+                }
+
                 continue;
             }
         }
 
         // special case: consider player a boid
-        if (toPlayerDist < playerSensorRadius) {
+        if (flockWithPlayer && toPlayerDist < playerSensorRadius) {
+            if (!flockedWithPlayerLastFrame) {
+                PlaySound(true);
+                flockedWithPlayerLastFrame = true;
+            }
+
             flockCenter += playerPosition;
             flockVelocity += playerVelocity;
             count++;
@@ -173,7 +239,9 @@ public class BoidBehaviour : MonoBehaviour {
             frameSpeed = Mathf.Max(frameSpeed, Mathf.Lerp(playerSpeed, playerSpeed * playerSpeedMult,
                 Mathf.Clamp01(Mathf.InverseLerp(playerSensorRadius, avoidanceDist, toPlayerDist))));
 
-            targetPlayer = true;
+            targetPlayer = targetPlayerWhenClose;
+        } else {
+            flockedWithPlayerLastFrame = false;
         }
 
         // avoid phys collisions
@@ -269,6 +337,8 @@ public class BoidBehaviour : MonoBehaviour {
     }
 
     public void Launch(Vector3 direction) {
+        PlaySound();
+
         StopAllCoroutines();
         StartCoroutine(LaunchRoutine(direction));
     }
@@ -285,6 +355,55 @@ public class BoidBehaviour : MonoBehaviour {
             yield return null;
         }
 
+        if (type == BoidType.Giant) {
+            PlaySound();
+        }
+
         state = BoidState.Flying;
+    }
+
+    public void Call() {
+        if (state == BoidState.Flying) {
+            StopAllCoroutines();
+            StartCoroutine(CallRoutine());
+        }
+    }
+
+    private IEnumerator CallRoutine() {
+        float p = Random.value;
+        bool tripleCall = p <= trippleCallProbability;
+        bool doubleCall = p <= (doubleCallProbability + Mathf.Max(0f, trippleCallProbability));
+
+        yield return new WaitForSeconds(Random.Range(0f, randomCallStartDelay));
+
+        PlaySound();
+
+        if (doubleCall) {
+            yield return new WaitForSeconds(callDelayTime);
+            PlaySound();
+        }
+
+        if (tripleCall) {
+            yield return new WaitForSeconds(callDelayTime);
+            PlaySound();
+        }
+    }
+
+    private void PlaySound(bool shortSound = false) {
+        if (callDelayTimeRemaining > 0f) {
+            return;
+        }
+
+        callDelayTimeRemaining = callDelayTime;
+
+        if (type == BoidType.Giant) {
+            soundManager.PlaySound(SoundType.Whale, transform.position);
+        } else if (type == BoidType.Bird) {
+            if (shortSound) {
+                soundManager.PlaySound(SoundType.BirdSqueak, transform.position);
+            } else {
+                soundManager.PlaySound(SoundType.Bird, transform.position);
+            }
+        }
     }
 }

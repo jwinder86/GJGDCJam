@@ -4,6 +4,8 @@ using System.Collections.Generic;
 
 public class PlantSpawner : MonoBehaviour {
 
+    public PlantSpawner[] avoidSamplesFrom;
+
     public PlantBehaviour[] prefabs;
     public bool randomPrefab = false;
 
@@ -17,6 +19,21 @@ public class PlantSpawner : MonoBehaviour {
 
     public bool visInEditor;
     public bool extraLogging = false;
+
+    private SoundManager soundManager;
+
+    private bool generationStarted;
+    private bool generationCompleted;
+    private List<Vector3> worldSpaceSamples;
+    public List<Vector3> Samples {
+        get {
+            if (!generationCompleted) {
+                GeneratePlants();
+            }
+
+            return worldSpaceSamples;
+        }
+    }
 
     //public int updateFrames = 10;
     //private int curUpdateFrame = 0;
@@ -58,15 +75,37 @@ public class PlantSpawner : MonoBehaviour {
     }
 
     public void GeneratePlants() {
+        Debug.Log("Starting generation: " + name);
+
+        if (generationStarted) {
+            if (!generationCompleted) {
+                Debug.LogError("GeneratePlants called after already started but not yet completed: " + name);
+            }
+
+            return;
+        }
+        generationStarted = true;
+
+        List<Vector3> prereqSamples = new List<Vector3>();
+        if (avoidSamplesFrom != null) {
+            Debug.Log("Requesting samples from prereqs: " + name);
+            for (int i = 0; i < avoidSamplesFrom.Length; i++) {
+                prereqSamples.AddRange(avoidSamplesFrom[i].Samples);
+            }
+        }
+        List<Vector2> localSamples = ConvertToLocal(prereqSamples);
+        Debug.Log("Received and converted " + localSamples.Count + " samples: " + name);
+
+        worldSpaceSamples = new List<Vector3>();
         plants = new List<PlantBehaviour>();
 
-        if (randomPrefab) {
+        /*if (randomPrefab) {
             GeneratePlants(prefabs);
         } else {
             foreach (PlantBehaviour prefab in prefabs) {
                 GeneratePlants(new PlantBehaviour[] { prefab });
             }
-        }
+        }*/
 
         // calc total value
         totalValue = 0;
@@ -74,6 +113,8 @@ public class PlantSpawner : MonoBehaviour {
         foreach (PlantBehaviour plant in plants) {
             totalValue += plant.value;
         }
+
+        generationCompleted = true;
     }
 
     public void UpdatePlants(Vector3 playerPos) {
@@ -93,18 +134,22 @@ public class PlantSpawner : MonoBehaviour {
 
 	private void GeneratePlants(PlantBehaviour[] selectedPrefabs) {
         PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
-        List<Vector2> samples = sampler.generateSamples(delegate(Vector2 s) { return PlacePlant(s, selectedPrefabs); });
+        int sampleCount = sampler.generateSamples(delegate(Vector2 s) { return PlacePlant(s, selectedPrefabs); });
 
-        if (extraLogging) { Debug.Log("Sample count: " + samples.Count); }
+        if (extraLogging) { Debug.Log("Sample count: " + sampleCount); }
 
         // force a single plant
-        if (samples.Count == 0 && minOnePlant) {
+        if (sampleCount == 0 && minOnePlant) {
             PlacePlant(Vector2.zero, selectedPrefabs);
-            samples.Add(Vector2.zero);
         }
 	}
 
     private bool PlacePlant(Vector2 sample, PlantBehaviour[] selectedPrefabs) {
+        // get sound manager
+        if (soundManager == null) {
+            soundManager = FindObjectOfType<SoundManager>();
+        }
+
         Vector3 pos = new Vector3(sample.x, height / 2f, sample.y);
         Vector3 worldPos = transform.TransformPoint(pos);
 
@@ -112,9 +157,14 @@ public class PlantSpawner : MonoBehaviour {
         if (Physics.Raycast(worldPos, -transform.up, out hit, height, layerMask)) {
             if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Ground") &&
                 Vector3.Angle(transform.up, hit.normal) <= maxAngle) {
-                PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), worldPos + hit.distance * -transform.up, Quaternion.identity);
+                Vector3 position = worldPos + hit.distance * -transform.up;
+
+                worldSpaceSamples.Add(position);
+
+                PlantBehaviour plant = (PlantBehaviour)Instantiate(ChoosePrefab(selectedPrefabs), position, Quaternion.identity);
                 plant.transform.parent = transform;
                 plant.SetNormal(hit.normal);
+                plant.SoundManager = soundManager;
 
                 plants.Add(plant);
                 return true;
@@ -126,7 +176,18 @@ public class PlantSpawner : MonoBehaviour {
         return false;
     }
 
-    PlantBehaviour ChoosePrefab(PlantBehaviour[] prefabs) {
+    private PlantBehaviour ChoosePrefab(PlantBehaviour[] prefabs) {
         return prefabs[Random.Range(0, prefabs.Length)];
+    }
+
+    private List<Vector2> ConvertToLocal(List<Vector3> prereqSamples) {
+        List<Vector2> samples = new List<Vector2>(prereqSamples.Count);
+
+        foreach (Vector3 worldPos in prereqSamples) {
+            Vector3 localPos = transform.InverseTransformPoint(worldPos);
+            samples.Add(new Vector2(localPos.x, localPos.z));
+        }
+
+        return samples;
     }
 }

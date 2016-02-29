@@ -11,7 +11,24 @@ GameObject:
   - 33: {fileID: 3307224}
   - 23: {fileID: 2328650}
   m_Layer: 13
-  m_Name: Torus1_cut2_Torus1_cut2_auv
+  m_Name: LeafLOD0
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!1 &167218
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 434892}
+  - 33: {fileID: 3365008}
+  - 23: {fileID: 2368372}
+  m_Layer: 13
+  m_Name: VineLOD0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,7 +45,7 @@ GameObject:
   - 33: {fileID: 3397984}
   - 23: {fileID: 2366308}
   m_Layer: 13
-  m_Name: Torus1_default
+  m_Name: VineLOD1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -47,6 +64,7 @@ GameObject:
   - 65: {fileID: 6565090}
   - 65: {fileID: 6515902}
   - 65: {fileID: 6551848}
+  - 205: {fileID: 20527610}
   m_Layer: 13
   m_Name: LargeVine
   m_TagString: Untagged
@@ -65,7 +83,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 423202}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!4 &423202
 Transform:
   m_ObjectHideFlags: 1
@@ -73,13 +91,26 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 199658}
   m_LocalRotation: {x: 0, y: 0, z: -1, w: -0.00000016292068}
-  m_LocalPosition: {x: 51.225227, y: 118.861176, z: 426.17685}
+  m_LocalPosition: {x: 634.15466, y: 47.697613, z: -33.103397}
   m_LocalScale: {x: 4, y: 4, z: 4}
   m_Children:
   - {fileID: 441866}
+  - {fileID: 434892}
   - {fileID: 413134}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+--- !u!4 &434892
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167218}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 423202}
+  m_RootOrder: 1
 --- !u!4 &441866
 Transform:
   m_ObjectHideFlags: 1
@@ -144,6 +175,32 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
+--- !u!23 &2368372
+MeshRenderer:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167218}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_Materials:
+  - {fileID: 2100000, guid: 99420546dababa14b82dbcfbae0cb1e2, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
 --- !u!33 &3307224
 MeshFilter:
   m_ObjectHideFlags: 1
@@ -151,13 +208,20 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 102538}
   m_Mesh: {fileID: 4300000, guid: f561b16d6220c3c499f8215e6b01edaf, type: 3}
+--- !u!33 &3365008
+MeshFilter:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 167218}
+  m_Mesh: {fileID: 4300002, guid: f561b16d6220c3c499f8215e6b01edaf, type: 3}
 --- !u!33 &3397984
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 167688}
-  m_Mesh: {fileID: 4300002, guid: f561b16d6220c3c499f8215e6b01edaf, type: 3}
+  m_Mesh: {fileID: 4300002, guid: 069eb153dd246614aa48e7f3468de30c, type: 3}
 --- !u!65 &6515902
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -207,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnDist: 20
   spawnDistRand: 0.5
-  spawnTime: 0.5
+  spawnTime: 0.75
   value: 10
   randomizeYRotation: 1
   curve:
@@ -227,7 +291,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   yScaleRandomization: 0.1
-  launchChance: 0.5
+  playRustleSound: 0
   yOffsetRandomization: 2
 --- !u!114 &11466680
 MonoBehaviour:
@@ -240,6 +304,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be3874246abae754090958727004a9a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!205 &20527610
+LODGroup:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 199658}
+  serializedVersion: 2
+  m_LocalReferencePoint: {x: 0, y: 0.9489745, z: -0.000058498234}
+  m_Size: 4.0556765
+  m_FadeMode: 1
+  m_AnimateCrossFading: 0
+  m_LODs:
+  - screenRelativeHeight: 0.1508202
+    fadeTransitionWidth: 0.05
+    renderers:
+    - renderer: {fileID: 2328650}
+    - renderer: {fileID: 2368372}
+  - screenRelativeHeight: 0.038055595
+    fadeTransitionWidth: 0.1
+    renderers:
+    - renderer: {fileID: 2366308}
+  m_Enabled: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -257,7 +343,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: spawnTime
-      value: 0.5
+      value: 0.75
       objectReference: {fileID: 0}
     - target: {fileID: 0}
       propertyPath: randomizeYRotation

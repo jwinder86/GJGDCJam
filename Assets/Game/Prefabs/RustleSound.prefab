@@ -9,7 +9,7 @@ GameObject:
   m_Component:
   - 4: {fileID: 411806}
   - 82: {fileID: 8292944}
-  - 114: {fileID: 11423964}
+  - 114: {fileID: 11486810}
   m_Layer: 0
   m_Name: RustleSound
   m_TagString: Untagged
@@ -103,7 +103,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 0
---- !u!114 &11423964
+--- !u!114 &11486810
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -111,11 +111,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 106974}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 73e6075f7a0e7b2449cf3a79ab6906a1, type: 3}
+  m_Script: {fileID: 11500000, guid: 612ea1282bbb78e4e87e4f3593867454, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playTime: 0.5
   fadeTime: 0.5
+  delayTime: 0.6
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -130,6 +131,18 @@ Prefab:
     - target: {fileID: 0}
       propertyPath: fadeTime
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: delayTime
+      value: 0.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: MaxDistance
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: MinDistance
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
