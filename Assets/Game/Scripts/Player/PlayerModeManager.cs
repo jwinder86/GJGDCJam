@@ -7,7 +7,8 @@ public class PlayerModeManager : MonoBehaviour {
     public enum PlayerMode {
         Hover,
         Flight,
-        Stun
+        Stun,
+        Intro
     }
 
     public float transitionTime;
@@ -15,6 +16,8 @@ public class PlayerModeManager : MonoBehaviour {
 
     public float hardHitSpeed = 10f;
     public AudioClip hitHard;
+    public AudioClip toFlight;
+    public AudioClip toHover;
     public ParticleBehaviour hitParticlePrefab;
 
     public float flightBurstSpeed = 20f;
@@ -23,6 +26,7 @@ public class PlayerModeManager : MonoBehaviour {
 
     public float minHeight = -150f;
     public float maxHeight = 500f;
+    public float maxRadialDist = 1000f;
 
     private PlayerMode mode;
     public PlayerMode Mode {
@@ -36,6 +40,7 @@ public class PlayerModeManager : MonoBehaviour {
     private PlayerFlightBehaviour flight;
     private PlayerCameraBehaviour cam;
     private PlayerLeavesBehaviour leavesEffect;
+    private SpeedEffectBehaviour speedEffect;
     private SoundManager soundManager;
     private PlayerPhysicsBehaviour phys;
     private float defaultDrag;
@@ -51,6 +56,7 @@ public class PlayerModeManager : MonoBehaviour {
         flight = GetComponent<PlayerFlightBehaviour>();
         cam = GetComponent<PlayerCameraBehaviour>();
         leavesEffect = GetComponentInChildren<PlayerLeavesBehaviour>();
+        speedEffect = GetComponentInChildren<SpeedEffectBehaviour>();
         phys = GetComponentInChildren<PlayerPhysicsBehaviour>();
 
         animator = GetComponentInChildren<Animator>();
@@ -76,12 +82,37 @@ public class PlayerModeManager : MonoBehaviour {
         spawnAngle = transform.rotation;
         hoverMove.InitializeAngles(spawnAngle.eulerAngles.y);
     }
+
+    public void SetIntroMode(bool introMode) {
+        if (introMode) {
+            paused = true;
+            mode = PlayerMode.Intro;
+
+            cam.enabled = false;
+            leavesEffect.enabled = false;
+            speedEffect.SpeedEffectActive = false;
+            
+            hoverMove.enabled = false;
+            flight.enabled = false;
+        } else {
+            paused = false;
+
+            cam.enabled = true;
+            cam.RunIntroRoutine();
+            leavesEffect.enabled = true;
+            speedEffect.SpeedEffectActive = true;
+            
+            mode = PlayerMode.Stun;
+            StartCoroutine(ChangeMode(PlayerMode.Hover));
+        }
+    }
 	
-   // Update is called once per frame
+    // Update is called once per frame
 	void Update () {
         if (!paused) {
             // manual toggle
             if (Input.GetButtonDown("ToggleFly")) {
+                audio.PlayOneShot(mode == PlayerMode.Flight ? toHover : toFlight);
                 setMode(mode == PlayerMode.Flight ? PlayerMode.Hover : PlayerMode.Flight);
             }
 
@@ -89,7 +120,7 @@ public class PlayerModeManager : MonoBehaviour {
                 StartCoroutine(ExitRoutine());
             }
 
-            if (phys.position.y < minHeight || phys.position.y > maxHeight) {
+            if (phys.position.y < minHeight || phys.position.y > maxHeight || phys.position.magnitude > maxRadialDist) {
                 StartCoroutine(ResetRoutine());
             }
         }
@@ -132,7 +163,7 @@ public class PlayerModeManager : MonoBehaviour {
 
     public void HandleLeavesTrigger() {
         leavesEffect.EmitLeaves();
-        soundManager.PlaySound(SoundType.Rustle, transform.position);
+        soundManager.PlaySound(SoundType.Rustle, transform);
     }
 
     public void HandleCollision(Collision collision) {
@@ -159,6 +190,7 @@ public class PlayerModeManager : MonoBehaviour {
 
     private IEnumerator StunRoutine() {
         paused = true;
+        speedEffect.SpeedEffectActive = false;
 
         PlayerMode oldMode = mode;
         mode = PlayerMode.Stun;
@@ -182,6 +214,7 @@ public class PlayerModeManager : MonoBehaviour {
         hoverMove.InitializeAngles(heading);
         hoverMove.enabled = true;
 
+        speedEffect.SpeedEffectActive = true;
         paused = false;
     }
 
@@ -195,6 +228,8 @@ public class PlayerModeManager : MonoBehaviour {
     }
 
     private IEnumerator ChangeMode(PlayerMode newMode) {
+        Debug.Log("Switching from " + mode + " to " + newMode);
+
         PlayerMode oldMode = mode;
         mode = newMode;
 
@@ -213,6 +248,7 @@ public class PlayerModeManager : MonoBehaviour {
             flight.enabled = true;
             phys.velocity = transform.forward * flightBurstSpeed;
         } else {
+            Debug.Log("Starting hover mode");
             hoverMove.InitializeAngles(heading);
             hoverMove.enabled = true;
         }

@@ -330,6 +330,7 @@ MonoBehaviour:
   callDelayTime: 3
   randomCallStartDelay: 1
   doubleCallProbability: 0.3
+  trippleCallProbability: 0.3
   maxDist: 300
   maxDistFromTarget: 50
   target: {fileID: 0}
@@ -355,7 +356,7 @@ LODGroup:
   m_LocalReferencePoint: {x: 0, y: 0, z: 0}
   m_Size: 2.5815518
   m_FadeMode: 1
-  m_AnimateCrossFading: 0
+  m_AnimateCrossFading: 1
   m_LODs:
   - screenRelativeHeight: 0.15300371
     fadeTransitionWidth: 0.05

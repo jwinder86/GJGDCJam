@@ -15,7 +15,7 @@ public class OneShotSoundBehaviour : MonoBehaviour {
     public float randomDelay = 0f;
 
     new private AudioSource audio;
-    private Vector3 latestPosition;
+    private Transform latestTransform;
 
     private float maxVolume;
     private int nextIndex;
@@ -37,14 +37,14 @@ public class OneShotSoundBehaviour : MonoBehaviour {
     }
 
 
-    public bool PlaySound(Vector3 position, ref int index) {
-        Debug.Log("Sound requestion at " + position);
+    public bool PlaySound(Transform transform, ref int index) {
+        //Debug.Log("Sound requestion at " + position);
         if (audio.isPlaying || locked) {
-            Debug.Log("Sound is already playing: " + name);
+            //Debug.Log("Sound is already playing: " + name);
             return false;
         }
 
-        latestPosition = position;
+        latestTransform = transform;
 
         selectIndex(ref index);
 
@@ -54,10 +54,9 @@ public class OneShotSoundBehaviour : MonoBehaviour {
     }
 
     private IEnumerator PlaySoundRoutine() {
-        Debug.Log("Will play sound at end of frame");
+        //Debug.Log("Will play sound at end of frame");
         yield return new WaitForEndOfFrame();
         locked = true;
-        transform.position = latestPosition;
 
         if (randomDelay > 0f) {
             yield return new WaitForSeconds(Random.Range(0f, randomDelay));
@@ -66,12 +65,13 @@ public class OneShotSoundBehaviour : MonoBehaviour {
         AudioClip clip = clips[nextIndex];
         nextIndex = -1;
 
-        Debug.Log("Playing clip: " + clip.name);
+        //Debug.Log("Playing clip: " + clip.name);
 
         if (randomizePitch > 0f) {
             audio.pitch = 1f + Random.Range(-randomizePitch, randomizePitch);
         }
 
+        transform.position = latestTransform.position;
         audio.volume = maxVolume;
         audio.clip = clip;
         audio.Play();
@@ -83,9 +83,13 @@ public class OneShotSoundBehaviour : MonoBehaviour {
         locked = false;
 
         if (limitTime) {
-            yield return new WaitForSeconds(playTime);
+            for (float timer = 0f; timer < playTime; timer += Time.deltaTime) {
+                transform.position = latestTransform.position;
+                yield return null;
+            }
 
             for (float timer = 0f; timer < fadeTime; timer += Time.deltaTime) {
+                transform.position = latestTransform.position;
                 audio.volume = Mathf.Lerp(maxVolume, 0f, timer / fadeTime);
                 yield return null;
             }

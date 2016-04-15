@@ -5,10 +5,11 @@ Shader "Toon/Lit Color" {
     }
 
     SubShader {
-        Tags { "RenderType" = "TransparentCutout" "Queue" = "AlphaTest" }
+        Tags { "RenderType" = "Opaque" }
         LOD 200
 
         CGPROGRAM
+        #pragma multi_compile_instancing
         #pragma multi_compile _ LOD_FADE_CROSSFADE
         #pragma surface surf ToonRamp vertex:vert
         #pragma target 3.0
@@ -58,5 +59,5 @@ Shader "Toon/Lit Color" {
 
     }
 
-        Fallback "Diffuse"
+        Fallback "Toon/Shadow"
 }

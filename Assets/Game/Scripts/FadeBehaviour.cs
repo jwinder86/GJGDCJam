@@ -13,9 +13,10 @@ public class FadeBehaviour : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        fadeIn = true;
+
         if (fadeOnAwake) {
             fadeTimer = fadeTime;
-            fadeIn = true;
         } else {
             fadeTimer = 0f;
         }
@@ -50,7 +51,6 @@ public class FadeBehaviour : MonoBehaviour {
     }
 
     public void FadeOut() {
-        Debug.Log("Fade out");
         fadeTimer = fadeTime;
         fadeIn = false;
     }

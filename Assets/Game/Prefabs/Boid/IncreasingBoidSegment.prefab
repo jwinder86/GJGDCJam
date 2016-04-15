@@ -692,6 +692,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToParent: 2
   rollTime: 0.2
+  timeDelay: 0.5
+  wingFreq: 1
+  wingAngle: 20
   dorsalFin: {fileID: 0}
   leftWing: {fileID: 423456}
   rightWing: {fileID: 460080}
@@ -720,7 +723,7 @@ LODGroup:
   m_LocalReferencePoint: {x: 0.00000011920929, y: -0.03280571, z: 1.0197825}
   m_Size: 4.4370127
   m_FadeMode: 1
-  m_AnimateCrossFading: 0
+  m_AnimateCrossFading: 1
   m_LODs:
   - screenRelativeHeight: 0.30032554
     fadeTransitionWidth: 0.05
@@ -750,7 +753,15 @@ Prefab:
   serializedVersion: 2
   m_Modification:
     m_TransformParent: {fileID: 0}
-    m_Modifications: []
+    m_Modifications:
+    - target: {fileID: 0}
+      propertyPath: wingFreq
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 0}
+      propertyPath: timeDelay
+      value: 0.5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 107088}

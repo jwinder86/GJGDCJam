@@ -10,7 +10,7 @@ public class VinePlantBehaviour : ScalePlantBehaviour {
     }
 
     protected override IEnumerator SpawnRoutine() {
-        soundManager.PlaySound(SoundType.Rustle, transform.position);
+        soundManager.PlaySound(SoundType.Rustle, transform);
 
         transform.position += new Vector3(0f, Random.Range(0f, yOffsetRandomization), 0f);
 

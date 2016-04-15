@@ -36,6 +36,7 @@ public class SegmentHeadBehaviour : MonoBehaviour {
             SegmentBehaviour segment;
             if (i == 0) {
                 segment = Instantiate(headPrefab);
+                segment.RemoveWings();
             } else if (i == segmentCount - 1) {
                 segment = Instantiate(tailPrefab);
             } else if (i < increasingSegmentCount) {
@@ -82,6 +83,6 @@ public class SegmentHeadBehaviour : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        head.UpdatePosition(transform.position, boid.Roll);
+        head.UpdatePosition(transform.position, boid.Roll, Time.time);
 	}
 }

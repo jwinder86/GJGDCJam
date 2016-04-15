@@ -125,7 +125,7 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 0
   yScaleRandomization: 0
-  launchChance: 0.01
+  playRustleSound: 0
 --- !u!205 &20565852
 LODGroup:
   m_ObjectHideFlags: 1
@@ -136,7 +136,7 @@ LODGroup:
   m_LocalReferencePoint: {x: 0, y: 0.20049848, z: 0}
   m_Size: 2
   m_FadeMode: 1
-  m_AnimateCrossFading: 0
+  m_AnimateCrossFading: 1
   m_LODs:
   - screenRelativeHeight: 0.05583208
     fadeTransitionWidth: 0.05

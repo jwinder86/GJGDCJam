@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: F3:GeoDome1_F3:GeoDome1_auv
     100002: //RootNode
+    100004: default
     400000: F3:GeoDome1_F3:GeoDome1_auv
     400002: //RootNode
+    400004: default
     2300000: F3:GeoDome1_F3:GeoDome1_auv
+    2300002: default
     3300000: F3:GeoDome1_F3:GeoDome1_auv
+    3300002: default
     4300000: F3:GeoDome1_F3:GeoDome1_auv
+    4300002: default
   materials:
     importMaterials: 0
     materialName: 0

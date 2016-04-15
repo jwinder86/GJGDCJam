@@ -27,15 +27,15 @@ public class IslandManager : MonoBehaviour {
     public BoidTargetGroup boidTargets;
     //public BoidTargetGroup miniBoidTargets;
 
-    private PlantSpawner[] spawners;
+    private PlantManager[] spawners;
     private BoidManager boidManager;
-    private MiniBoidManager miniBoidManager;
+    //private MiniBoidManager miniBoidManager;
     private PlayerPhysicsBehaviour player;
 
     void Awake() {
-        spawners = GetComponentsInChildren<PlantSpawner>();
+        spawners = GetComponentsInChildren<PlantManager>();
         boidManager = FindObjectOfType<BoidManager>();
-        miniBoidManager = FindObjectOfType<MiniBoidManager>();
+        //miniBoidManager = FindObjectOfType<MiniBoidManager>();
         player = FindObjectOfType<PlayerPhysicsBehaviour>();
     }
 
@@ -47,6 +47,9 @@ public class IslandManager : MonoBehaviour {
         // generate all plants
         for (int i = 0; i < spawners.Length; i++) {
             spawners[i].GeneratePlants();
+        }
+        for (int i = 0; i < spawners.Length; i++) {
+            spawners[i].CleanUp();
         }
         System.GC.Collect();
     }

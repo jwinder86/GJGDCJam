@@ -232,6 +232,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distToParent: 2
   rollTime: 0.2
+  timeDelay: 0.2
+  wingFreq: 0.3
+  wingAngle: 20
   dorsalFin: {fileID: 0}
   leftWing: {fileID: 0}
   rightWing: {fileID: 0}
@@ -260,7 +263,7 @@ LODGroup:
   m_LocalReferencePoint: {x: 0.0004004985, y: 0.02363348, z: 0.520404}
   m_Size: 1.705678
   m_FadeMode: 1
-  m_AnimateCrossFading: 0
+  m_AnimateCrossFading: 1
   m_LODs:
   - screenRelativeHeight: 0.30032554
     fadeTransitionWidth: 0.05

@@ -78,12 +78,12 @@ public class BoidManager : MonoBehaviour {
         }
         startIndex = (startIndex + 1) % disabledUpdateFrames;
 
-        // remove active boids
+        // remove inactive boids
         disabledBoids.ExceptWith(scratch);
 
-        if (Input.GetKeyDown(KeyCode.B)) {
+        /*if (Input.GetKeyDown(KeyCode.B)) {
             CreateBigBoid(Vector3.zero, Vector3.up);
-        }
+        }*/
     }
 
     private System.Collections.IEnumerator CallRoutine() {
@@ -112,6 +112,7 @@ public class BoidManager : MonoBehaviour {
 
     public void CreateBoid(Vector3 position, Vector3 launchDirection, BoidTarget target = null) {
         BoidBehaviour boid = (BoidBehaviour)Instantiate(boidPrefab, position, Quaternion.identity);
+        boid.transform.parent = transform;
         boid.SoundManager = soundManager;
         boid.Launch(launchDirection);
 
@@ -122,6 +123,7 @@ public class BoidManager : MonoBehaviour {
 
     public void CreateBigBoid(Vector3 position, Vector3 launchDirection) {
         BoidBehaviour boid = (BoidBehaviour)Instantiate(bigBoidPrefab, position, Quaternion.identity);
+        boid.transform.parent = transform;
         boid.SoundManager = soundManager;
         boid.Launch(launchDirection);
 
@@ -129,6 +131,6 @@ public class BoidManager : MonoBehaviour {
 
         activeBoids.Add(boid);
 
-        FindObjectOfType<PlayerCameraBehaviour>().Shake(1f);
+        //FindObjectOfType<PlayerCameraBehaviour>().Shake(1f);
     }
 }

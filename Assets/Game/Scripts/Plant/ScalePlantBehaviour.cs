@@ -53,7 +53,7 @@ public class ScalePlantBehaviour : PlantBehaviour {
         }
 
         if (playRustleSound) {
-            soundManager.PlaySound(SoundType.ShortRustle, transform.position);
+            soundManager.PlaySound(SoundType.ShortRustle, transform);
         }
 
         transform.localScale = MIN_SCALE_VECTOR;

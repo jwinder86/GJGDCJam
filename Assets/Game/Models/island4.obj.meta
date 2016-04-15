@@ -8,15 +8,20 @@ ModelImporter:
     100000: F3:GeoDome1_default
     100002: //RootNode
     100004: F3:GeoDome1_F3:GeoDome1_auv
+    100006: default
     400000: F3:GeoDome1_default
     400002: //RootNode
     400004: F3:GeoDome1_F3:GeoDome1_auv
+    400006: default
     2300000: F3:GeoDome1_default
     2300002: F3:GeoDome1_F3:GeoDome1_auv
+    2300004: default
     3300000: F3:GeoDome1_default
     3300002: F3:GeoDome1_F3:GeoDome1_auv
+    3300004: default
     4300000: F3:GeoDome1_default
     4300002: F3:GeoDome1_F3:GeoDome1_auv
+    4300004: default
   materials:
     importMaterials: 0
     materialName: 0

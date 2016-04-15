@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class PlantSpawner : MonoBehaviour {
+public class PlantSpawner : MonoBehaviour, PlantManager {
 
     public PlantSpawner[] avoidSamplesFrom;
 
@@ -74,8 +74,12 @@ public class PlantSpawner : MonoBehaviour {
         }
     }
 
+    public void CleanUp() {
+        worldSpaceSamples = null;
+    }
+
     public void GeneratePlants() {
-        Debug.Log("Starting generation: " + name);
+        //Debug.Log("Starting generation: " + name);
 
         if (generationStarted) {
             if (!generationCompleted) {
@@ -88,30 +92,32 @@ public class PlantSpawner : MonoBehaviour {
 
         List<Vector3> prereqSamples = new List<Vector3>();
         if (avoidSamplesFrom != null) {
-            Debug.Log("Requesting samples from prereqs: " + name);
+            //Debug.Log("Requesting samples from prereqs: " + name);
             for (int i = 0; i < avoidSamplesFrom.Length; i++) {
                 prereqSamples.AddRange(avoidSamplesFrom[i].Samples);
             }
         }
         List<Vector2> localSamples = ConvertToLocal(prereqSamples);
-        Debug.Log("Received and converted " + localSamples.Count + " samples: " + name);
+        //Debug.Log("Received and converted " + localSamples.Count + " samples: " + name);
 
         worldSpaceSamples = new List<Vector3>();
         plants = new List<PlantBehaviour>();
 
-        /*if (randomPrefab) {
-            GeneratePlants(prefabs);
+        if (randomPrefab) {
+            GeneratePlants(prefabs, localSamples);
         } else {
             foreach (PlantBehaviour prefab in prefabs) {
-                GeneratePlants(new PlantBehaviour[] { prefab });
+                GeneratePlants(new PlantBehaviour[] { prefab }, localSamples);
             }
-        }*/
+        }
 
         // calc total value
         totalValue = 0;
         currentValue = 0;
         foreach (PlantBehaviour plant in plants) {
-            totalValue += plant.value;
+            if (plant != null) {
+                totalValue += plant.value;
+            }
         }
 
         generationCompleted = true;
@@ -123,24 +129,30 @@ public class PlantSpawner : MonoBehaviour {
         if (playerDist < updateRadius) {
             currentValue = 0;
             for (int i = 0; i < plants.Count; i++) {
-                if (!plants[i].Spawned) {
-                    plants[i].UpdatePlayerPos(playerPos);
-                } else {
-                    currentValue += plants[i].value;
+                if (plants[i] != null) {
+                    if (!plants[i].Spawned) {
+                        plants[i].UpdatePlayerPos(playerPos);
+                    } else {
+                        currentValue += plants[i].value;
+                    }
                 }
             }
         }
     }
 
-	private void GeneratePlants(PlantBehaviour[] selectedPrefabs) {
+	private void GeneratePlants(PlantBehaviour[] selectedPrefabs, List<Vector2> externalSamples) {
         PoissonDiskSampler sampler = new PoissonDiskSampler(radius, minDist);
-        int sampleCount = sampler.generateSamples(delegate(Vector2 s) { return PlacePlant(s, selectedPrefabs); });
+        int sampleCount = sampler.generateSamples(delegate(Vector2 s) { return PlacePlant(s, selectedPrefabs); }, externalSamples);
 
         if (extraLogging) { Debug.Log("Sample count: " + sampleCount); }
 
         // force a single plant
-        if (sampleCount == 0 && minOnePlant) {
-            PlacePlant(Vector2.zero, selectedPrefabs);
+        if (sampleCount == 0) {
+            if (minOnePlant) {
+                PlacePlant(Vector2.zero, selectedPrefabs);
+            } else {
+                Debug.LogError("Failed to create plants: " + name + " in " + transform.parent.name);
+            }
         }
 	}
 

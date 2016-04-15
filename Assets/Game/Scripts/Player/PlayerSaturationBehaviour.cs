@@ -19,9 +19,19 @@ public class PlayerSaturationBehaviour : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         float maxSat = 0f;
+        IslandManager sel = null;
         for (int i = 0; i < islands.Length; i++) {
-            maxSat = Mathf.Max(maxSat, islands[i].SaturationValue);
+            if (islands[i].SaturationValue > maxSat) {
+                maxSat = islands[i].SaturationValue;
+                sel = islands[i];
+            }
         }
+
+        /*if (sel != null) {
+            Debug.Log("Saturation from: " + sel.name);
+        } else {
+            Debug.Log("No islands provide saturation");
+        }*/
 
         colorCurves.saturation = Mathf.Lerp(minSaturation, maxSaturation, maxSat);
         //Debug.Log("Cur Sat: " + colorCurves.saturation);

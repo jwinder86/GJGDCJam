@@ -23,16 +23,16 @@ public class SoundManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        rustleManager = new RepeatingSoundManager(rustlePrefab, rustleCount, minDist);
-        longRustleManager = new RepeatingSoundManager(longRustlePrefab, creakCount, minDist);
-        shortRustleManager = new RepeatingSoundManager(shortRustlePrefab, shortRustleCount, minDist);
-        creakManager = new OneShotSoundManager(creakPrefab, creakCount, minDist);
-        whaleManager = new OneShotSoundManager(whalePrefab, whaleCount, 0f);
-        birdManager = new OneShotSoundManager(birdPrefab, birdCount, 0f);
-        birdSqueakManager = new OneShotSoundManager(birdSqueakPrefab, birdSqueakCount, 0f);
-	}
+        rustleManager = new RepeatingSoundManager(rustlePrefab, rustleCount, minDist, transform);
+        longRustleManager = new RepeatingSoundManager(longRustlePrefab, creakCount, minDist, transform);
+        shortRustleManager = new RepeatingSoundManager(shortRustlePrefab, shortRustleCount, minDist, transform);
+        creakManager = new OneShotSoundManager(creakPrefab, creakCount, minDist, transform);
+        whaleManager = new OneShotSoundManager(whalePrefab, whaleCount, 0f, transform);
+        birdManager = new OneShotSoundManager(birdPrefab, birdCount, 0f, transform);
+        birdSqueakManager = new OneShotSoundManager(birdSqueakPrefab, birdSqueakCount, 0f, transform);
+    }
 	
-	public void PlaySound(SoundType type, Vector3 position) {
+	public void PlaySound(SoundType type, Transform position) {
         switch (type) {
             case SoundType.Rustle:
                 rustleManager.PlaySound(position);
@@ -65,10 +65,11 @@ public class SoundManager : MonoBehaviour {
         private Vector3 lastPosition;
         private int index;
 
-        public RepeatingSoundManager(RepeatingSoundBehaviour prefab, int count, float minDist) {
+        public RepeatingSoundManager(RepeatingSoundBehaviour prefab, int count, float minDist, Transform parent) {
             sounds = new RepeatingSoundBehaviour[count];
             for (int i = 0; i < count; i++) {
                 sounds[i] = Instantiate(prefab);
+                sounds[i].transform.parent = parent;
             }
 
             minDistSqr = minDist * minDist;
@@ -76,10 +77,10 @@ public class SoundManager : MonoBehaviour {
             index = 0;
         }
 
-        public void PlaySound(Vector3 position) {
-            if ((position - lastPosition).sqrMagnitude >= minDistSqr &&
-                    NextSound().PlaySound(position)) {
-                lastPosition = position;
+        public void PlaySound(Transform transform) {
+            if ((transform.position - lastPosition).sqrMagnitude >= minDistSqr &&
+                    NextSound().PlaySound(transform)) {
+                lastPosition = transform.position;
             }
         }
 
@@ -97,10 +98,11 @@ public class SoundManager : MonoBehaviour {
         private int index;
         private int clipIndex;
 
-        public OneShotSoundManager(OneShotSoundBehaviour prefab, int count, float minDist) {
+        public OneShotSoundManager(OneShotSoundBehaviour prefab, int count, float minDist, Transform parent) {
             sounds = new OneShotSoundBehaviour[count];
             for (int i = 0; i < count; i++) {
                 sounds[i] = Instantiate(prefab);
+                sounds[i].transform.parent = parent;
             }
 
             minDistSqr = minDist * minDist;
@@ -109,10 +111,10 @@ public class SoundManager : MonoBehaviour {
             clipIndex = 0;
         }
 
-        public void PlaySound(Vector3 position) {
-            if ((position - lastPosition).sqrMagnitude >= minDistSqr && 
-                    NextSound().PlaySound(position, ref clipIndex)) {
-                lastPosition = position;
+        public void PlaySound(Transform transform) {
+            if ((transform.position - lastPosition).sqrMagnitude >= minDistSqr && 
+                    NextSound().PlaySound(transform, ref clipIndex)) {
+                lastPosition = transform.position;
             }
         }
 

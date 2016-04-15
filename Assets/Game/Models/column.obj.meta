@@ -7,11 +7,16 @@ ModelImporter:
   fileIDToRecycleName:
     100000: //RootNode
     100002: Cylinder2_default
+    100004: Cylinder2_Cylinder2_auv
     400000: //RootNode
     400002: Cylinder2_default
+    400004: Cylinder2_Cylinder2_auv
     2300000: Cylinder2_default
+    2300002: Cylinder2_Cylinder2_auv
     3300000: Cylinder2_default
+    3300002: Cylinder2_Cylinder2_auv
     4300000: Cylinder2_default
+    4300002: Cylinder2_Cylinder2_auv
   materials:
     importMaterials: 0
     materialName: 0

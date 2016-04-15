@@ -8,7 +8,7 @@ public class RepeatingSoundBehaviour : MonoBehaviour {
     public float fadeTime = 1f;
 
     new private AudioSource audio;
-    private Vector3 latestPosition;
+    private Transform latestTransform;
 
     private bool locked;
 
@@ -29,7 +29,6 @@ public class RepeatingSoundBehaviour : MonoBehaviour {
 
         audio.Pause();
 
-        latestPosition = Vector3.zero;
         locked = false;
     }
 
@@ -37,12 +36,12 @@ public class RepeatingSoundBehaviour : MonoBehaviour {
         audio.time = audio.clip.length * p;
     }
 
-    public bool PlaySound(Vector3 position) {
+    public bool PlaySound(Transform transform) {
         if (locked) {
             return false;
         }
 
-        latestPosition = position;
+        latestTransform = transform;
 
         StopAllCoroutines();
         StartCoroutine(PlayRoutine());
@@ -54,14 +53,18 @@ public class RepeatingSoundBehaviour : MonoBehaviour {
         yield return new WaitForEndOfFrame();
 
         locked = true;
-        transform.position = latestPosition;
 
+        transform.position = latestTransform.position;
         audio.volume = 1f;
         audio.UnPause();
 
-        yield return new WaitForSeconds(playTime);
+        for (float timer = 0f; timer < playTime; timer += Time.deltaTime) {
+            transform.position = latestTransform.position;
+            yield return null;
+        }
         
         for (float timer = 0f; timer < fadeTime; timer += Time.deltaTime) {
+            transform.position = latestTransform.position;
             audio.volume = 1f - (timer / fadeTime);
             yield return null;
         }

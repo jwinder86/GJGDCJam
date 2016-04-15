@@ -397,12 +397,12 @@ public class BoidBehaviour : MonoBehaviour {
         callDelayTimeRemaining = callDelayTime;
 
         if (type == BoidType.Giant) {
-            soundManager.PlaySound(SoundType.Whale, transform.position);
+            soundManager.PlaySound(SoundType.Whale, transform);
         } else if (type == BoidType.Bird) {
             if (shortSound) {
-                soundManager.PlaySound(SoundType.BirdSqueak, transform.position);
+                soundManager.PlaySound(SoundType.BirdSqueak, transform);
             } else {
-                soundManager.PlaySound(SoundType.Bird, transform.position);
+                soundManager.PlaySound(SoundType.Bird, transform);
             }
         }
     }

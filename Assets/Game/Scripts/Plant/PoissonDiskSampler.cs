@@ -21,21 +21,24 @@ public class PoissonDiskSampler {
         List<Vector2> active = new List<Vector2>();
         SpacialLookup lookup = new SpacialLookup(radius, minDist);
 
+        //Debug.Log("Generating samples!");
+
         // add external samples
         if (externalSamples != null) {
-            Debug.Log("Sampler adding " + externalSamples.Count + " external samples");
+            //Debug.Log("Sampler adding " + externalSamples.Count + " external samples");
             foreach (Vector2 ex in externalSamples) {
                 lookup.Insert(ex);
             }
         }
-
+        
         if (!AddFirstSamples(ref samples, ref active, ref lookup, place)) {
             if (!AddFirstSamples(ref samples, ref active, ref lookup, place)) {
-                Debug.LogError("Unable to add first sample after 2 attempts.");
+                Debug.LogWarning("Unable to add first sample after 2 attempts.");
                 return samples.Count;
             }
         }
 
+        
         while (active.Count > 0) {
             // select random index and move to end
             int index = Random.Range(0, active.Count);
@@ -53,6 +56,7 @@ public class PoissonDiskSampler {
             }
 
             if (!found) {
+                //Debug.Log("No point found after " + k + " iterations, removing active point: " + selected);
                 active.RemoveAt(active.Count - 1);
             }
         }
@@ -61,10 +65,13 @@ public class PoissonDiskSampler {
     }
 
     private bool validateAndAddSample(Vector2 sample, ref List<Vector2> samples, ref List<Vector2> active, ref SpacialLookup lookup, PlaceSample place) {
+        //Debug.Log("Attempting to add sample: " + sample);
         if (validateBounds(sample) && validateDistSamples(ref lookup, sample) && place(sample)) {
             samples.Add(sample);
             active.Add(sample);
             lookup.Insert(sample);
+
+            //Debug.Log("Sample Added!");
             return true;
         }
         return false;
@@ -151,6 +158,7 @@ public class PoissonDiskSampler {
                             data[x, y].HasValue) {
                         Vector2 other = data[x, y].Value;
                         if ((pos - other).sqrMagnitude < distSqr) {
+                            //Debug.Log("Collision at " + pos + " with " + other);
                             return true;
                         }
                     }
@@ -161,11 +169,14 @@ public class PoissonDiskSampler {
         }
 
         public void Insert(Vector2 pos) {
+            //Debug.Log("Inserting position: " + pos);
             if (validPosition(pos)) {
                 data[
                     posToIndex(pos.x),
                     posToIndex(pos.y)] = pos;
-            }
+            } /*else {
+                Debug.Log("invalid position: " + pos);
+            }*/
         }
 
         private bool validPosition(Vector2 pos) {
@@ -173,9 +184,9 @@ public class PoissonDiskSampler {
             int indexY = posToIndex(pos.y);
 
             if (validIndex(indexX) && validIndex(indexY)) {
-                return false;
-            } else {
                 return true;
+            } else {
+                return false;
             }
         }
 

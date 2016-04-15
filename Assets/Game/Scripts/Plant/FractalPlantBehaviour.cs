@@ -50,7 +50,7 @@ public class FractalPlantBehaviour : PlantBehaviour {
     protected override IEnumerator SpawnRoutine() {
         yield return new WaitForSeconds(spawnDelay);
 
-        soundManager.PlaySound(SoundType.Creak, transform.position);
+        soundManager.PlaySound(SoundType.Creak, transform);
 
         root.LerpScaleRecursive(0f);
 

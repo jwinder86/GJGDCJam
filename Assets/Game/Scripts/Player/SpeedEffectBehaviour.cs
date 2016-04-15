@@ -8,6 +8,17 @@ public class SpeedEffectBehaviour : MonoBehaviour {
     public float maxVelocity = 20f;
     public float curVelocityImpact = 0.1f;
 
+    private bool speedEffectActive;
+    public bool SpeedEffectActive {
+        get { return speedEffectActive; }
+        set {
+            speedEffectActive = value;
+            if (value == false) {
+                avgVelocity = 0f;
+            }
+        }
+    }
+
     new private AudioSource audio;
     private float avgVelocity;
     private Vector3 prevPosition;
@@ -22,6 +33,8 @@ public class SpeedEffectBehaviour : MonoBehaviour {
     void Start() {
         avgVelocity = 0f;
         prevPosition = transform.position;
+
+        speedEffectActive = true;
     }
 	
 	// Update is called once per frame
@@ -32,11 +45,16 @@ public class SpeedEffectBehaviour : MonoBehaviour {
         avgVelocity = curVelocityImpact * instVelocity + (1f - curVelocityImpact) * avgVelocity;
         float normalizedAvgVel = Mathf.Clamp01(Mathf.InverseLerp(minVelocity, maxVelocity, avgVelocity));
 
-        audio.volume = normalizedAvgVel;
-        audio.pitch = 1f + normalizedAvgVel;
+        if (speedEffectActive) {
+            audio.volume = normalizedAvgVel;
+            audio.pitch = 1f + normalizedAvgVel;
 
-        cam.Shake(normalizedAvgVel);
+            cam.Shake(normalizedAvgVel);
+        } else {
+            audio.volume = 0f;
+            audio.pitch = 1f;
 
-        //Debug.Log("Speed: " + avgVelocity + " Range: [" + minVelocity + ", " + maxVelocity + "] Volume: " + vol);
+            avgVelocity = 0f;
+        }
 	}
 }

@@ -9,8 +9,6 @@ GameObject:
   m_Component:
   - 4: {fileID: 430308}
   - 114: {fileID: 11438744}
-  - 114: {fileID: 11493204}
-  - 114: {fileID: 11413480}
   - 114: {fileID: 11479824}
   - 114: {fileID: 11458012}
   m_Layer: 0
@@ -32,21 +30,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!114 &11413480
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ca4fb00defbdbda478632a66c6d01b94, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  defaultPoolSize: 10
-  poolableObjects:
-  - {fileID: 11445586, guid: 09902408f2349594ab428b61decf0d0b, type: 2}
-  initialSizes: 14000000
 --- !u!114 &11438744
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -99,23 +82,12 @@ MonoBehaviour:
   boidPrefab: {fileID: 11469794, guid: 4c8375900b9719744b94b6f5c4546aab, type: 2}
   bigBoidPrefab: {fileID: 11487692, guid: 153e7801d51bcde4290db943a5e02977, type: 2}
   bigBoidTargets: {fileID: 0}
-  minBoidCallTime: 5
-  maxBoidCallTime: 15
+  minBoidCallTime: 15
+  maxBoidCallTime: 30
+  minBigBoidCallTime: 20
+  maxBigBoidCallTime: 40
   disabledUpdateFrames: 10
   activeBoidMax: 50
---- !u!114 &11493204
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 138288}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7a3f3a71b7f51a642b2c42a2805ec86e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  prefab: {fileID: 11445586, guid: 09902408f2349594ab428b61decf0d0b, type: 2}
-  target: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
